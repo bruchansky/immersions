@@ -18,5 +18,6 @@ A full list of candidate features is available on our Github issues page. All su
 Kickstarter page: https://www.kickstarter.com/projects/bruchansky/immersions-immersive-art-in-vr-and-on-the-web
 
 Many thanks!
+
 Christophe Bruchansky
 
