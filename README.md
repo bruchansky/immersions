@@ -1,4 +1,6 @@
 # immersions.art
+![immersions.art](https://github.com/immersions/blob/main/immersions.png?raw=true)
+
 Immersions.art is a VR platform designed by artists for artists.
 
 Our public beta is available now, please go to https://immersions.art and explore three immersive artworks. With your help, we would like to organise an inaugural virtual exhibition and release an open source library that every artist can use to create their own immersive experiences.
