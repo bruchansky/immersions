@@ -1,5 +1,5 @@
 # immersions.art
-![immersions.art](https://github.com/immersions/blob/main/immersions.png?raw=true)
+![immersions.art](https://github.com/bruchansky/immersions/blob/main/immersions.png?raw=true)
 
 Immersions.art is a VR platform designed by artists for artists.
 
