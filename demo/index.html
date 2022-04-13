@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name=”viewport” content=”width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no” />
+    <meta name="theme-color" content="#ffffff">
+    <title>My Immersion</title> 
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <script src="https://unpkg.com/earcut@2.1.1/dist/earcut.min.js"></script><!-- for extruded polygons -->
+    <script src="/immersion_engine/immersion_library.js"></script>
+    <script src="/demo/immersion.js"></script>
+    <!-- full screen mode -->
+    <style>
+        html, body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        launchImmersion(null,null,null,null,"/immersion_engine/");
+        // 1st "lang" parameter is the language ("en" by default)
+        // 2nd "mode" parameter is the navigation mode. 3 modes: 'arc' is the default navigation, 'dvp' is a universal navigation with information for development, 'capture' mode hides all stands for video capture
+        // 3rd "mute" parameter is false by default, useful when developing 
+        // 4th "dest" parameter is like an html anchor but in VR, goes directly to the stand with the name specified, useful for development
+        // 5th parameter is the path to engine assets, it is "/immersion_engine/" by default
+        // If 1st, 2nd, 3rd or 4th parameter are null, launchImmersion will search in the page URL to find them (GET)
+    </script>
+</body>
+</html>
