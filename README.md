@@ -28,7 +28,7 @@ Please feel free to [ask me any question](https://github.com/bruchansky/immersio
 
 Try these urls on mobile, desktop and with your virtual headset. I’ve performed most tests on the Meta Quest 2 headset, but immersions should also work on other virtual headsets.
 
-Google cardboards are not supported though because of their specific navigation. But it is perfectly feasible, and I’ve added the feature in [future improvements](https://github.com/bruchansky/immersions/issues).
+Google cardboards are not supported because of their specific navigation. But it is perfectly feasible, and I’ve added the feature in [future improvements](https://github.com/bruchansky/immersions/issues).
 
 ## License 
 
