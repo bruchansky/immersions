@@ -36,18 +36,18 @@ This library is free to use and under a GNU Lesser General Public License (the b
 
 This way, you can use it for your immersive experiences, retain your copyright and keep full control over your creative and artistic work (commercial and non-commercial).
 
-The only condition is that you credit the library and babylon.js in your source files (see template header, LICENSE & COPYING.LESSER files), and that you keep the "Open Source" button and VR stand in the user interface.
+The only condition is that you credit the library and babylon.js in your source files (see [template](https://github.com/bruchansky/immersions/blob/main/template/immersion.js) header, LICENSE & COPYING.LESSER files), and that you keep the "Open Source" button and VR stand in the user interface.
 
 ## Installation 
 
-1.  Download the src folder and rename it as you wish, let’s call it ‘vr’ in our example. The folder includes:
+1.  Download all the code and move it a local folder ('vr' for example). You'll use the following three folders:
     * The immersion\_engine where the immersion library and all engine assets are.
     * The template folder: this is the one to edit in order to create your immersion.
     * The demo folder: this is where you’ll find all documented examples on how to use the immersion engine. 
 2.  Install a web server on your local machine so that you can test your immersion. I personally use Python [SimpleHTTPServer](https://www.linuxjournal.com/content/tech-tip-really-simple-http-server-python) because it is the easiest to install. 
-3.  Start your local server: open a terminal window (I use [iTerm2](https://iterm2.com/) on Mac), move to where the vr folder is located on your machine (cd whereyourfolderis/vr), and start your server with the following command: “python3 -m http.server 9000” (might be another port).
-4.  Open your browser (chrome for instance) and test that your template works: localhost:9000/whereyourfolderis/vr/template/index.html.
-5.  Do the same for the demo: localhost:9000/<whereyourfolderis>/vr/demo/index.html.
+3.  Start your local server: open a terminal window (I use [iTerm2](https://iterm2.com/) on Mac), move to where the vr folder is located on your machine, and start your server with the following command: “python3 -m http.server 9000” (might be another port).
+4.  Open your browser (chrome for instance) and test that your template works: localhost:9000/vr/template/index.html.
+5.  Do the same for the demo: localhost:9000/vr/demo/index.html.
 6.  Both should look the same than on the two urls at the top of this page.
 7.  If both work as expected, that’s it, everything is installed and you’re ready to develop.
 
