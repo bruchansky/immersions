@@ -7,7 +7,7 @@ The Immersion open source library allows anyone with basic knowledge of javascri
 
 I initially developed the library for my immersive art projects. But it can also be used for simulations, games, and any immersive experience you want. I keep updating the engine based on my personal artistic needs, and everyone is welcomed to contribute.
 
-I started the indie project in December 2021. I didn’t want to depend on commercial virtual spaces for my artistic creations. I didn’t want to be restricted by game and artificial scarcity mechanics found on other VR platforms. I believe the web is still the best metaverse out there: anybody can publish on it and it can now deliver truly immersive experiences.
+I started the indie project in December 2021. I didn’t want to depend on commercial virtual spaces for my artistic creations. I didn’t want to be restricted by game and artificial scarcity mechanics found on other VR platforms. I believe the web is still the best metaverse out there for artistic expression: anybody can publish on it and it can now deliver truly immersive experiences.
 
 Please feel free to [ask me any question](https://github.com/bruchansky/immersions/discussions) or [request new features](https://github.com/bruchansky/immersions/issues). And let me know about your immersions!
 
