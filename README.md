@@ -1,6 +1,6 @@
 # Immersions (VR Library)
 <p align="center">
-  <img src="https://github.com/bruchansky/immersions/blob/main/docs/demo.jpg">
+  <img width="830px" src="https://github.com/bruchansky/immersions/blob/main/docs/demo.jpg">
 </p>
 
 The Immersion open source library allows anyone with basic knowledge of javascript to create immersive experiences in virtual reality and on the Web. It is based on [WebXR](https://immersiveweb.dev/) and uses the [babylon.js](https://www.babylonjs.com/) real time 3D engine.
@@ -21,7 +21,7 @@ Please feel free to [ask me any question](https://github.com/bruchansky/immersio
 * **Art projects based on the library:** [**https://immersions.art**](https://immersions.art)
 
 <p align="center">
-  <img src="https://github.com/bruchansky/immersions/blob/main/docs/demo-rock.jpg">
+  <img width="830px" src="https://github.com/bruchansky/immersions/blob/main/docs/demo-rock.jpg">
 </p>
 <p align="center"><i>3D scan of a rock inside the demo</i></p>
 
@@ -77,7 +77,7 @@ Before describing how to develop your immersion, here are some tips on how to ea
 \* For Gravity Sketch models, I download them first as obj files. I import them in Sketchfab. I make some final material adjustments and export them in the gltf format. Each layer can be retrieved separately with babylon.js.
    
 <p align="center">
-  <img src="https://github.com/bruchansky/immersions/blob/main/docs/example-art.jpg">
+  <img width="830px" src="https://github.com/bruchansky/immersions/blob/main/docs/example-art.jpg">
 </p>
 <p align="center"><i>Example of immersion using 3D assets ("<a href="https://immersions.art/constructions" target="_blank">Constructions</a>")</i></p>
 
@@ -88,7 +88,7 @@ Now that you have installed the immersion engine and have created your 3D assets
 Immersions are composed of reusable navigation elements called “stands”. Stands allow visitors to interact with their environment whether in virtual reality, on desktop, mobile or tablet. Immersions will automatically display a user interface if you’re on mobile or desktop, and will handle the most widespread ways to navigate in VR. So that you can focus on the experience you want to create, and not think about engine setup or navigation. 
    
 <p align="center">
-  <img src="https://github.com/bruchansky/immersions/blob/main/docs/immersions-features.jpg">
+  <img width="830px" src="https://github.com/bruchansky/immersions/blob/main/docs/immersions-features.jpg">
 </p>
 
 All stands can be created in just two lines:
