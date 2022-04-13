@@ -121,7 +121,7 @@ Stands are developed as javascript classes to make it easy to extend them and cr
 
 Now, here is how to create your immersion:
 
-*   Copy the template folder, rename it as you wish and start editing the immersion.js file inside. I personally use [VStudio](https://visualstudio.microsoft.com/) to edit files.
+*   Clone the template folder, rename it as you wish and start editing the immersion.js file inside. I personally use [VStudio](https://visualstudio.microsoft.com/) to edit files.
 *   Use the immersion.js file inside the demo folder as your main reference. You’ll find inside:
     *   Examples of all stands with some explanation on how to use them. Copy and paste the ones you would like to use and configure. Use the ‘dvp’ mode to navigate your immersion and decide where to position your stands.
     *   Examples on how to set the scene, sky, ground, lights and sounds.
