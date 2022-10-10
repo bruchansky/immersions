@@ -7,7 +7,7 @@ The Immersion open source library allows anyone with basic knowledge of javascri
 
 I initially developed the library for my immersive art projects. But it can also be used for simulations, games, and any immersive experience. I keep updating the engine based on my personal artistic needs, and everyone is welcomed to contribute.
 
-I started the indie project in December 2021. I didn’t want to depend on commercial virtual spaces for my artistic creations. I didn’t want to be restricted by game and artificial scarcity mechanics found on other VR platforms. I believe the web is still the best metaverse out there for artistic expression: anybody can publish on it and it can now deliver truly immersive journeys.
+I started the indie project in December 2021. I didn’t want to depend on commercial virtual spaces for my artistic creations, to be restricted by game and artificial scarcity mechanics found on other VR platforms. I believe the web is still the best metaverse out there for artistic expression: anybody can publish on it and it can now deliver truly immersive journeys.
 
 Please feel free to [ask me any question](https://github.com/bruchansky/immersions/discussions) or [request new features](https://github.com/bruchansky/immersions/issues). And let me know about your immersions!
 
@@ -60,7 +60,7 @@ The only condition is that you credit the library and babylon.js in your source 
     *    "mode" parameter is the navigation mode:
         *   'arc' is the default navigation.
         *   'dvp' is a universal camera navigation with information for development such as current position and positions of each mesh (displayed in the development console).
-        *    'capture' mode hides all stands, useful for for video and image captures.
+        *    'screenshot' mode hides all stands, useful for for video and image captures.
     *   "mute" parameter is false by default, useful when developing.
     *    "dest" parameter is like an html anchor but in VR, it goes directly to the stand with the name specified (to be used only for development atm).
 
@@ -107,8 +107,7 @@ Here are all the different types of stands you can create, all are documented in
 --> “Gates” are stands that teleport visitors to another location (another stand) in your immersion.
   They are useful for large immersions (they can be up to 500x500 m2!).
   
---> “Links” are stands that open external links. Because this is potentially very disruptive in VR mode,
-  a countdown mechanism is developed to avoid any user mistake.
+--> “Links” are stands that open external links.
   
 --> “Displays” are stands that can display texts and images, 
   and also can play a sound or perform a configurable action.
