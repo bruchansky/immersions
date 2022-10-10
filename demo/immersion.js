@@ -3,7 +3,7 @@
 
 // This immersive experience uses the Immersions library under a GNU Lesser General Public License
 // and the babylon.js 3D engine under an Apache-2.0 License (https://www.babylonjs.com/).
-// Unless stated otherwise, it is not open source and authors retain their copyright.
+// Unless stated otherwise, this creation is not open source and authors retain their copyright.
 // Learn how to make your own immersion at https://bruchansky.name/immersions-vr-library.
 
 
@@ -13,10 +13,10 @@
 // Immersions are 500x500m2.
 class MyImmersion extends Immersion {
     constructor(engine) { 
-        super("demo","light",engine); // name and style of your immersion: either "light" or "dark" colours (default)
+        super("demo","light",engine); // name and style of your immersion: either "light" or "dark" (default)
 
         /*   ATMOSPHERES    */
-        // Sky and ground settings linked to stands ("atmospheres"), see babylonjs doc for more details
+        // Sky and ground settings that can be activated by stands
         var groundMaterial = new BABYLON.StandardMaterial(this); // custom ground material
         groundMaterial.alpha = 0.5;
         groundMaterial.diffuseColor = BABYLON.Color3.White();
@@ -34,7 +34,7 @@ class MyImmersion extends Immersion {
         this.envNight.skyColor = new BABYLON.Color3(1, 1, 1); 
         this.envNight.fogDensity = 0.05; 
         this.envNight.fogColor = new BABYLON.Color3(0.407, 0.592, 0.992);
-        this.setAtmosphere(this.envOptions,true); // sets the default atmosphere to be used at start and whenever it is not defined (see stands section)
+        this.setAtmosphere(this.envOptions,true); // sets the default atmosphere to be used at start 
 
         /*   MATERIALS    */
         // Materials used in your immersion (see babylonjs material documentation)
@@ -48,7 +48,7 @@ class MyImmersion extends Immersion {
         this.wireframeMaterial.wireframe = true;
         this.wireframeMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
         this.wireframeMaterial.ambientColor = new BABYLON.Color3(1, 1, 1);
-        // makes meshes with "neon" in their name glow
+        // makes meshes including "neon" in their name glow
         this.gl = new BABYLON.GlowLayer("glow", this);
         this.gl.customEmissiveColorSelector = function(mesh, subMesh, material, result) {
             if (mesh.name.includes("neon")) {
@@ -77,14 +77,15 @@ class MyImmersion extends Immersion {
         // Texts and links used in your immersion, in several languages if you wish
         // Stand windows can fit about 200 characters 
         // Stand window titles can fit about 20 characters
+        this.sizeMb="20"; // optional parameter to inform the user of how big is the immersion to download
         var textOptionsEN = new Object();
         textOptionsEN.title="My Immersion"; // default is "Title"
         textOptionsEN.author="My Name"; // default is "Author" (displayed under title)
-        textOptionsEN.about="Welcome to this immersion. It can be an art project, a simulation, a game, any immersive experience you want. Visit the open source page to learn how to create your own immersion."; // Text displayed on the first stand welcoming visitors
+        textOptionsEN.about="Welcome to this immersion demo. Visit the open source page to create your own."; // Text displayed on the first welcoming stand
         textOptionsEN.aboutTextButton="About"; // used in the top right menu and at the end of the immersion, default is "About"
-        textOptionsEN.aboutLink="https://bruchansky.name/2022/02/10/immersions-art/"; // your website link, top right menu and at the end of the immersion
-        textOptionsEN.exitTextButton="Art"; // second button you can customise at the end of the immersion
-        textOptionsEN.exitLink="https://immersions.art"; // second button you can customise at the end of your immersion
+        textOptionsEN.aboutLink="https://bruchansky.name/2022/02/10/immersions-art/"; // your website link, top right button and stand at the end of the immersion
+        textOptionsEN.exitTextButton="Art"; // second button/stand that you can customise at the end of the immersion
+        textOptionsEN.exitLink="https://immersions.art"; // second button/stand you can customise at the end of your immersion
         textOptionsEN.viewpoint="View-\npoint"; // suggested text for simple stand signs
         textOptionsEN.audio="Audio\nStand"; //  suggested text for audio stand signs
         textOptionsEN.text="Text\nDisplay"; //  suggested text for display signs
@@ -95,21 +96,20 @@ class MyImmersion extends Immersion {
         var textOptionsFR = new Object();
         textOptionsFR.title="Mon immersion"; 
         textOptionsFR.author="Mon nom"; 
-        textOptionsFR.about="Bienvenue dans cette immersion. Il peut s'agir d'un projet artistique, d'une simulation, d'un jeu, tout ce que tu souhaites. Visite la page open source pour savoir comment créer ta propre immersion"; 
+        textOptionsFR.about="Bienvenue dans cette immersion. Visite la page open source pour créer la tienne."; 
         textOptionsFR.aboutTextButton="À\npropos"; 
         textOptionsFR.aboutLink="https://bruchansky.name/2022/02/10/immersions-art/"; 
         textOptionsFR.exitTextButton="Art"; 
         textOptionsFR.exitLink="https://immersions.art/fr"; 
-        this.addTexts("fr",textOptionsFR); // to test, add "&lang=fr" in your url or as a parameter of your immersion
+        this.addTexts("fr",textOptionsFR); // to use, add "&lang=fr" in your url or as a parameter of your immersion
 
         /*   STANDS    */
 
         // Stands are navigation elements, they can be viewpoints, plinths, text displays, etc.
-        // Introduction and exit stands will be added automatically to your immersion.
+        // Introduction and exit stands are added automatically to your immersion.
         // Introduction stands are always located at the same location: (0,0,-175).
         // Position and angle of exit stands are configurable.
         var standsOptions = new Object();
-        standsOptions.welcomeImage="/demo/demo.jpg"; // displayed on the welcoming stand, 
         standsOptions.exitPosition=new BABYLON.Vector3(53,0,140); // where the exit stands are located
         standsOptions.exitAngle=20; // angle in degrees of the exit stands  (0 is in front, clockwise)
         standsOptions.exitAtmosphere=this.envNight; // sets atmosphere for exit stands
@@ -177,10 +177,10 @@ class MyImmersion extends Immersion {
 
         // Sound display 
         var soundDisplay = new Display ("soundDisplay",{
-            sound: "autoplay", // "autoplay" = plays automatically when coming to the stand (and stops sounds from other stands), "onpress" = plays only when pressing the sound button
+            sound: "autoplay", // "autoplay" = plays automatically when coming to the stand, "onpress" = plays only when pressing the sound button
             loop: false, // default is false 
             factorSound: 1, // configures how far the sound can be heard from, see babylonjs documentation
-            text: this.texts.audio, // recommended text for audio stands (appears on signs)
+            text: this.texts.audio, 
             windowOpened: false,
             title:"Sound Display",
             description:"This sound is automatically played when you arrive. You can stop it and replay it afterwards.",
@@ -196,9 +196,8 @@ class MyImmersion extends Immersion {
 
         // Simple display 
         var captionStand = new Display ("captionStand",{
-            caption: "Gates Info", // you can also add a caption to a display
             text:this.texts.text,
-            title:"Gates",
+            title:"Gate",
             description: "There are two types of gates: gates opening a link (left) and gates teleporting users to another location in the immersion (right).",
             atmosphere: this.envDesert,
             lineFrom:"soundDisplay",
@@ -210,10 +209,10 @@ class MyImmersion extends Immersion {
 
         // Gate
         var regularGate = new Gate ("regularGate",{
-            gate: "exhibitPlinth", // name of the stand the gate will teleport visitors to
-            text: this.texts.gate,  // recommended text for gates (appears on signs)
+            gate: "exhibitPlinth", // name of the stand the gate will teleport users to
+            text: this.texts.gate, 
             position: new BABYLON.Vector3(-49.5,0,-45),
-            lookingAt: new BABYLON.Vector3(-49.5,1.5,-44),
+            lookingAt: new BABYLON.Vector3(-49,1.5,-44),
             atmosphere: this.envDesert,
             style:"wireframe"
         },this);
@@ -221,7 +220,7 @@ class MyImmersion extends Immersion {
 
         // Link
         var regularLink = new Link ("regularLink",{
-            gate: "https://bruchansky.name", // link the gate will open
+            gate: "https://bruchansky.name", // link that the gate will open
             text: "Link", 
             position: new BABYLON.Vector3(-51.5,0,-45),
             lookingAt: new BABYLON.Vector3(-51.5,1.5,-44),
@@ -267,7 +266,7 @@ class MyImmersion extends Immersion {
             sound: "autoplay",
             rotationE: true, // rotates the exhibit 
             loop: false, 
-            exhibit: spherePlinth, // You can also directly add an exhibit to a stand (if it doesn't need to be loaded from an external file)
+            exhibit: spherePlinth, // directly adds an exhibit to a stand (if it doesn't need to be loaded from an external file)
             text: "#2", 
             title:"Exhibit #2",
             description:"You can also add simple meshes to a plinth, add a sound and an image.",
@@ -288,7 +287,6 @@ class MyImmersion extends Immersion {
             depth: 0.4,
             height: 1.2,
             distance: 1.8, // distance between the plinth and the base
-            caption: "Exhibit #3",
             exhibit: true,
             text: "#3", 
             title:"Exhibit #3",
@@ -330,7 +328,7 @@ class MyImmersion extends Immersion {
         var loading_sound3 = this.assetsManager.addBinaryFileTask("sound3","/demo/open.mp3");
         loading_sound3.onSuccess = function(task) {soundPlinth.loadSound(task.data);};
 
-        // Carousels are plinths with some eye-catching texts
+        // Carousels are plinths with some eye-catching text
         let carouselText = ["Art","VR","Open","Free"]; 
         var carousel = new Carousel ("carousel",{
             carousel:carouselText,
@@ -346,8 +344,16 @@ class MyImmersion extends Immersion {
         },this);
         this.addStand(carousel);
 
-        
-        this.activateNavigation(); // line to activate the stands
+        var c1=this.sphere1Material;
+        var c2=this.buildingMaterial;
+        var floorEntrance=[
+            [c1, c2, c1, c2,c1],
+            [c2, c1, c2, c1,c2],
+            [c1, c2, c1, c2,c1],
+            [c2, c1, c2, c1,c2],
+            [c1, c2, c1, c2,c1]
+        ];
+        this.activateNavigation(floorEntrance); // line to activate the stands (with an optional parameter to customise tiles) 
 
         
         /*   ASSETS    */
