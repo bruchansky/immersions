@@ -5,9 +5,9 @@
 
 The Immersion open source library allows anyone with basic knowledge of javascript to create immersive experiences in virtual reality and on the Web. It is based on [WebXR](https://immersiveweb.dev/) and uses the [babylon.js](https://www.babylonjs.com/) real time 3D engine.
 
-I initially developed the library for my immersive art projects. But it can also be used for simulations, games, and any immersive experience you want. I keep updating the engine based on my personal artistic needs, and everyone is welcomed to contribute.
+I initially developed the library for my immersive art projects. But it can also be used for simulations, games, and any immersive experience. I keep updating the engine based on my personal artistic needs, and everyone is welcomed to contribute.
 
-I started the indie project in December 2021. I didn’t want to depend on commercial virtual spaces for my artistic creations. I didn’t want to be restricted by game and artificial scarcity mechanics found on other VR platforms. I believe the web is still the best metaverse out there for artistic expression: anybody can publish on it and it can now deliver truly immersive experiences.
+I started the indie project in December 2021. I didn’t want to depend on commercial virtual spaces for my artistic creations. I didn’t want to be restricted by game and artificial scarcity mechanics found on other VR platforms. I believe the web is still the best metaverse out there for artistic expression: anybody can publish on it and it can now deliver truly immersive journeys.
 
 Please feel free to [ask me any question](https://github.com/bruchansky/immersions/discussions) or [request new features](https://github.com/bruchansky/immersions/issues). And let me know about your immersions!
 
@@ -36,7 +36,7 @@ This library is free to use and under a GNU Lesser General Public License (the b
 
 This way, you can use it for your immersive experiences, retain your copyright and keep full control over your creative and artistic work (commercial and non-commercial).
 
-The only condition is that you credit the library and babylon.js in your source files (see [template](https://github.com/bruchansky/immersions/blob/main/template/immersion.js) header, LICENSE & COPYING.LESSER files), and that you keep the "Open Source" button and VR stand in the user interface.
+The only condition is that you credit the library and babylon.js in your source files (see [template](https://github.com/bruchansky/immersions/blob/main/template/immersion.js) header, LICENSE & COPYING.LESSER files), and that you keep the "Open Source" button and virtual stand in the user interface.
 
 ## Installation 
 
@@ -44,10 +44,10 @@ The only condition is that you credit the library and babylon.js in your source 
     * The immersion\_engine where the immersion library and all engine assets are.
     * The template folder: this is the one to edit in order to create your immersion.
     * The demo folder: this is where you’ll find all documented examples on how to use the immersion engine. 
-2.  Install a web server on your local machine so that you can test your immersion. I personally use Python [SimpleHTTPServer](https://www.linuxjournal.com/content/tech-tip-really-simple-http-server-python) because it is the easiest to install. 
-3.  Start your local server: open a terminal window (I use [iTerm2](https://iterm2.com/) on Mac), move to where the vr folder is located on your machine, and start your server with the following command: “python3 -m http.server 9000” (might be another port).
-4.  Open your browser (chrome for instance) and test that your template works: localhost:9000/vr/template/index.html.
-5.  Do the same for the demo: localhost:9000/vr/demo/index.html.
+2.  Install a web server on your local machine so that you can test your immersion. I personally use Python [SimpleHTTPServer](https://www.linuxjournal.com/content/tech-tip-really-simple-http-server-python). 
+3.  Start your local server: open a terminal window (I use [iTerm2](https://iterm2.com/) on Mac and Windows Terminal on Windows), move to where the vr folder is located on your machine, and start your server with the following command: “python3 -m http.server 9000” (might be another port).
+4.  Open your browser (chrome for instance) and test that your template works: localhost:9000/template/index.html.
+5.  Do the same for the demo: localhost:9000/demo/index.html.
 6.  Both should look the same than on the two urls at the top of this page.
 7.  If both work as expected, that’s it, everything is installed and you’re ready to develop.
 
@@ -68,8 +68,9 @@ The only condition is that you credit the library and babylon.js in your source 
 
 Before describing how to develop your immersion, here are some tips on how to easily create your digital assets. All tools below can be used for free. Think outside the box and don’t limit yourself to virtual twins. Virtual possibilities are endless! 
 
-*   If you publish your immersion online (which I hope you will), keep an eye on the total size of your assets. My recommendation is to not exceed 20Mb, otherwise the immersion can be very slow to download on some mobile networks. 
+*   If you publish your immersion online (which I hope you will), keep an eye on the total size of your assets. My recommendation is to not exceed 20Mb, otherwise the immersion can be slow to download on some mobile networks. 
 *   To create 3D models, the standard is the [Blender](https://www.blender.org/) open source software. But I personally prefer to create 3D models directly in virtual reality using softwares such as [Gravity Sketch](https://www.gravitysketch.com/)\* on the Meta Quest 2. You can also download free 3D models on platforms such as [Sketchfab](https://sketchfab.com/).
+*   For animations, I use [Mixamo](https://www.mixamo.com/): in Gravity Sketch, export your model in .fbx format -> import it in Mixamo -> add your animation and download the .fbx file -> import it in Blender and export it in the .glb format.
 *   Many 3D scan solutions exist. I personally use [Polycam](https://poly.cam/) on my Android phone. Don’t expect perfect results but it’s still impressive, and you can make a limited number of free scans. Export your scan in the obj format, preferably in the reduced size to optimise download speed.
 *   For soundtracks, I mix ready-made loops from [GarageBand](https://www.apple.com/mac/garageband/) on iOS. You can also create original tracks with it, but the choice of loops is huge and they do the job.
 *   For audio voices, I use text to speech online tools such as this [one](https://freetts.com/). You’ll find many online, and they usually come with free trials.
