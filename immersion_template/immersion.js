@@ -3,8 +3,8 @@
 
 // This immersive experience uses the Immersions library under a GNU Lesser General Public License
 // and the babylon.js 3D engine under an Apache-2.0 License (https://www.babylonjs.com/).
-// Unless stated otherwise, it is not open source and authors retain their copyright.
-// Learn how to make your own immersion at https://bruchansky.name/immersions-vr-library.
+// Unless stated otherwise, content is not open source and authors retain their copyright.
+// Learn how to make your own immersion at https://bruchansky.name/immersions.
 
 // Copy this class to create your own immersion.
 class MyImmersion extends Immersion {
@@ -38,16 +38,16 @@ class MyImmersion extends Immersion {
         var textOptions = new Object();
         textOptions.title="My Immersion";
         textOptions.author="My Name"; 
-        textOptions.about="Welcome to this immersion."; 
+        textOptions.about="Welcome to this immersion (short text)."; 
+        textOptions.introduction="About this immersion (long text)."; 
         textOptions.aboutTextButton="About"; 
-        textOptions.aboutLink="https://bruchansky.name/2022/02/10/immersions-art/"; /* your website link */
+        textOptions.aboutLink="https://bruchansky.name/"; /* your website link */
         textOptions.exitTextButton="Art"; 
-        textOptions.exitLink="https://immersions.art"; 
+        textOptions.exitLink="https://bruchansky.name/digressions"; 
         this.addTexts("en",textOptions);
 
         /*   STANDS    */
         var standsOptions = new Object();
-        standsOptions.welcomeImage="/template/template.jpg"; 
         standsOptions.exitPosition=new BABYLON.Vector3(0,0,10); 
         standsOptions.exitAngle=0; 
         this.initiateStands(standsOptions); 

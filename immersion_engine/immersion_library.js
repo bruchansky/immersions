@@ -1,8 +1,8 @@
 /*
-The Immersion library allows you to create immersive experiences
+The Immersion library is to create immersive experiences
 in virtual reality and on the Web.
-Version 2.1, October 2022, using babylon.js 3D engine version 5.0.2.
-Copyright (C) 2022  Christophe Bruchansky
+Version 2.2, January 2023, using babylon.js 3D engine version 5.0.2.
+Copyright (C) 2023  Christophe Bruchansky
 https://bruchansky.name/
 
 This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Please keep the "Open Source" button & stand at the end of the 
 immersion so that other creators can learn about the library.
 Contact details and a list of all contributors are available on the 
-project page: https://bruchansky.name/immersions-vr-library.
+project page: https://bruchansky.name/immersions.
 */
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ class Immersion extends BABYLON.Scene {
         this.showTitleImmersion=true; // indicates if the title should appear on the sky after entering the immersion
         this.addDefaultText(); // sets all default text
         BABYLON.Engine.audioEngine.setGlobalVolume(1);
-        if (MODE=="dvp") var axes = new BABYLON.AxesViewer(this,10); 
+        if (MODE=="dvp") this.debugLayer.show();
         this.sceneSounds= new Array();
         /* camera settings */
         if (MODE=="dvp") this.camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0,0,0), this);
@@ -203,6 +203,13 @@ class Immersion extends BABYLON.Scene {
         this.assetsManager.useDefaultLoadingScreen = false;
         BABYLON.SceneLoader.ShowLoadingScreen = false;
         var immersion = this;
+        immersion.loadingShort="";
+        immersion.loading="";
+        immersion.assetsManager.onProgress = function (remainingCount, totalCount, lastFinishedTask) { 
+            var doneCount=totalCount-remainingCount;
+            immersion.loadingShort=immersion.texts.loadingShort+"\n("+doneCount+"/"+totalCount+")";
+            immersion.loading=immersion.texts.loading+"("+doneCount+"/"+totalCount+")";
+        };
         immersion.assetsManager.onFinish = function(tasks) {
             immersion.loadingButton.dispose();
             for (const stand of immersion.stands) {
@@ -236,17 +243,17 @@ class Immersion extends BABYLON.Scene {
         this.texts=new Object();
         if (LANG=='fr'){
             this.texts.aboutImmersionsButton="Open\nSource";
-            this.texts.aboutImmersionsLink="https://bruchansky.name/immersions-vr-library";
+            this.texts.aboutImmersionsLink="https://bruchansky.name/fr/immersions";
             this.texts.aboutTextButton="À\npropos"; 
             this.texts.aboutLink="https://bruchansky.name"; 
             this.texts.exitTextButton="Autres\nprojets"; 
-            this.texts.exitLink="https://immersions.art/fr"; 
+            this.texts.exitLink="https://bruchansky.name/fr/immersions"; 
             this.texts.inVR="- en VR et avec Audio -";
-            this.texts.hold="Avance ici ➔"; //Garder appuyé\net déplacer";
+            this.texts.hold="Avance ici ➔"; 
             this.texts.loading="Chargement";
             this.texts.loadingShort="Loading";
-            this.texts.unmute="Remettre\nle son";
-            this.texts.mute="Couper\nle son";
+            this.texts.unmute="Remet\nle son";
+            this.texts.mute="Coupe\nle son";
             this.texts.backPosition="Remise en\nposition";
             this.texts.viewpoint="Vue";
             this.texts.audio="Coin\nAudio";
@@ -274,16 +281,16 @@ class Immersion extends BABYLON.Scene {
             this.texts.title="Titre Immersion"; 
             this.texts.author="Auteur"; 
             this.texts.about="À propos de l'immersion"; 
-            this.texts.warning="À VISITER EN RÉALITÉ VIRTUELLE\n\nPour une immersion optimale,\nvisite cette page sur ton casque\nde réalité virtuelle.";
+            this.texts.warning="AUSSI EN RÉALITÉ VIRTUELLE\n\nOuvre la page web sur\nton casque de réalité virtuelle.";
         }else {
             this.texts.aboutImmersionsButton="Open\nSource";
-            this.texts.aboutImmersionsLink="https://immersions.art";
+            this.texts.aboutImmersionsLink="https://bruchansky.name/immersions";
             this.texts.aboutTextButton="About"; 
             this.texts.aboutLink="https://bruchansky.name"; 
             this.texts.exitTextButton="Other\nProjects"; 
-            this.texts.exitLink="https://immersions.art/";
+            this.texts.exitLink="https://bruchansky.name/immersions";
             this.texts.inVR="- In VR & with Audio -";
-            this.texts.hold="Move forward ➔";//"Hold & move\naround";
+            this.texts.hold="Move forward ➔";
             this.texts.loading="Loading";
             this.texts.loadingShort="Loading";
             this.texts.unmute="Unmute";
@@ -315,7 +322,7 @@ class Immersion extends BABYLON.Scene {
             this.texts.title="Immersion Title"; 
             this.texts.author="Author Name"; 
             this.texts.about="About this immersion"; 
-            this.texts.warning="EXPERIENCE IT IN VR\n\nTo fully immerse yourself, visit\nthis web page on your virtual reality\nheadset. No signup required.";
+            this.texts.warning="AVAILABLE IN VR\n\nOpen the web page on\nyour virtual reality headset.";
         }
     }
 
@@ -382,7 +389,7 @@ class Immersion extends BABYLON.Scene {
     }
 
     //////////////////////////////////////////////////////////////////////////////////
-    // immersion function to play sound on clicjs (if file loaded and not on mute)
+    // immersion function to play sound on clicks (if file loaded and not on mute)
     playClick () {
         if (this.click==null){
             this.click=new BABYLON.Sound("click", this.clickData, this, null, {
@@ -500,8 +507,6 @@ class Immersion extends BABYLON.Scene {
         this.selectionMaterial.emissiveColor = BABYLON.Color3.Black();
         this.selectionExitMaterial = new BABYLON.StandardMaterial(this); 
         this.selectionExitMaterial.ambientColor = BABYLON.Color3.Black();
-        //this.selectionExitMaterial.diffuseColor = new BABYLON.Color3(1, 0.490, 0.2);
-        //this.selectionExitMaterial.specularColor = new BABYLON.Color3(1, 0.490, 0.2);
         this.interfaceMaterial = new BABYLON.StandardMaterial(this); 
         this.interfaceMaterial.emissiveColor = BABYLON.Color3.Black();
 
@@ -511,9 +516,9 @@ class Immersion extends BABYLON.Scene {
         this.clickMaterial.disableLighting=true;
         this.clickMaterial.alpha=0.4;
         this.clickLinkMaterial = new BABYLON.StandardMaterial(this); 
-        this.clickLinkMaterial.emissiveColor = new BABYLON.Color3(0.90196, 0.54118, 0.00000);
+        this.clickLinkMaterial.emissiveColor = new BABYLON.Color3(1,1,0);
         this.clickLinkMaterial.disableLighting=true;
-        this.clickLinkMaterial.alpha=0.4;
+        this.clickLinkMaterial.alpha=0.9;
         // invisible wall to prevent moving backward when starting the immersion
         var protection = BABYLON.MeshBuilder.CreateBox("protection", {height: 5, width: 10, depth: 0.1});
         protection.position = new BABYLON.Vector3(0, 2.5, -181);
@@ -674,53 +679,49 @@ class Immersion extends BABYLON.Scene {
         rotationAnim2.setKeys(keys);
         let sphere1 = BABYLON.MeshBuilder.CreatePolyhedron("sphere1", {size:1.5,type:3}); // giant sphere appearing at the entrance
         sphere1.material=this.lightPlinthMaterial;
-        sphere1.position=new BABYLON.Vector3(5,4.5,-160);
+        sphere1.position=new BABYLON.Vector3(5,4.5,-161);
         sphere1.animations = [];
         sphere1.animations.push(rotationAnim);
         sphere1.animations.push(rotationAnim2);
+        sphere1.hidingDistance=20;
         
         let sphere2 = BABYLON.MeshBuilder.CreatePolyhedron("sphere2", {size:0.3,type:3}); // giant sphere appearing at the entrance
-        sphere2.material=this.darkPlinthMaterial;
+        sphere2.material=this.wireframePlinthMaterial;
         sphere2.position=new BABYLON.Vector3(-3,2.5,-158);
         sphere2.animations = [];
         sphere2.animations.push(rotationAnim);
         sphere2.animations.push(rotationAnim2);
-        sphere1.onPause=false;
         sphere1.anim = this.beginAnimation(sphere1, 0, 600, true);
-        sphere1.edgesColor = new BABYLON.Color4(1,1,1, 1);
-        sphere1.enableEdgesRendering();
-        sphere1.edgesWidth = 0;
-        sphere1.immersion=this;
-        sphere1.actionManager = new BABYLON.ActionManager(this);
-        sphere1.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){sphere1.edgesWidth = 1;}));
-        sphere1.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){sphere1.edgesWidth = 0;}));
-        sphere1.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-            if (sphere1.onPause==false) {
-                sphere1.onPause=true;
-                sphere1.anim.pause();
-            }else{
-                sphere1.onPause=false;
-                if (sphere1.anim) sphere1.anim.restart(); else sphere1.anim = sphere1.immersion.beginAnimation(sphere1, 0, 600, true);
-            }
-        }));
-        sphere2.onPause=false;
+        this.pauseOnClick(sphere1, sphere1.anim,true);
         sphere2.anim = this.beginAnimation(sphere2, 0, 600, true);
-        sphere2.edgesColor = new BABYLON.Color4(1,1,1, 1);
-        sphere2.enableEdgesRendering();
-        sphere2.edgesWidth = 0;
-        sphere2.immersion=this;
-        sphere2.actionManager = new BABYLON.ActionManager(this);
-        sphere2.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){sphere2.edgesWidth = 1;}));
-        sphere2.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){sphere2.edgesWidth = 0;}));
-        sphere2.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-            if (sphere2.onPause==false) {
-                sphere2.onPause=true;
-                sphere2.anim.pause();
-            }else{
-                sphere2.onPause=false;
-                if (sphere2.anim) sphere2.anim.restart(); else sphere2.anim = sphere2.immersion.beginAnimation(sphere2, 0, 600, true);
-            }
-        }));
+        this.pauseOnClick(sphere2, sphere2.anim,false);
+        sphere2.hidingDistance=20;
+
+        // shows introduction text
+        if (this.texts.introduction) {
+            this.introductionBoard = BABYLON.MeshBuilder.CreatePlane("introductionBoard", {height:3, width: 3.4, sideOrientation: BABYLON.Mesh.DOUBLESIDE});
+            this.introductionBoard.position=new BABYLON.Vector3(1.8,1.8,-159.8);
+            this.introductionBoard.rotation.y=BABYLON.Tools.ToRadians(90);
+            this.introductionBoard.applyFog=false;
+            this.introductionBoard.hidingDistance=20;
+            this.introductionText = new BABYLON.GUI.TextBlock();
+            this.introductionText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+            this.introductionText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+            this.introductionText.paddingTop="50px";
+            this.introductionText.paddingLeft="50px";
+            this.introductionText.paddingRight="50px";
+            this.introductionText.fontFamily = this.fontName;
+            this.introductionText.text = this.texts.introduction;
+            this.introductionText.textWrapping=true;
+            this.introductionText.color = "white";
+            this.introductionText.height = "600px";
+            this.introductionText.width = "680px";
+            this.introductionText.fontSize = 22;
+            this.introductionTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.introductionBoard,680,600);
+            this.introductionTexture.addControl(this.introductionText);
+            this.introductionTexture.background = "black";
+            this.introductionTexture.alpha=0.8;
+        }
         // shows the UI, sets the first stand, attaches the camera and other init tasks
         this.showNavigation();
         this.goFirstStand();
@@ -881,6 +882,7 @@ class Immersion extends BABYLON.Scene {
         });
         // called before every frame
         var immersion=this;
+        immersion.counterCheckDistance=0;
         immersion.registerBeforeRender(function () {
             // Recomputes camera position based on updated target
             if (MODE!=="dvp" && immersion.inXR==false && immersion.cameraMoving==true) immersion.activeCamera.rebuildAnglesAndRadius();
@@ -888,6 +890,24 @@ class Immersion extends BABYLON.Scene {
             immersion.meshes.forEach(element => {
                 if (element.calledOnEveryFrame) element.calledOnEveryFrame(immersion);
             });
+            immersion.counterCheckDistance++;
+            if (immersion.counterCheckDistance==10){
+                immersion.meshes.forEach(element => {
+                    if (element.hidingDistance){
+                        var global_position = element.position;
+                        if (element.parent && element.parent.position){ // if no parent or parent is a root (instantiateModelsToScene from Mixamo)
+                            const matrix = element.computeWorldMatrix(true); 
+                            global_position = BABYLON.Vector3.TransformCoordinates(element.position, matrix); 
+                        }
+                        if (global_position.subtract(immersion.activeCamera.position).length()<element.hidingDistance && !element.isEnabled()){
+                            element.setEnabled(true);
+                        } else if (global_position.subtract(immersion.activeCamera.position).length()>=element.hidingDistance && element.isEnabled() ){
+                            element.setEnabled(false);
+                        }
+                    }
+                });
+                immersion.counterCheckDistance=0;
+            }
             // Updates coordinates displayed in dvp mode
             if (MODE=="dvp") immersion.coordinatesDisplay.text = 'x:'+immersion.activeCamera.position.x.toFixed(1)+',y:'+immersion.activeCamera.position.y.toFixed(1)+',z:'+immersion.activeCamera.position.z.toFixed(1)+',Looking at @x:'+immersion.activeCamera.getTarget().x.toFixed(2)+',@y:'+immersion.activeCamera.getTarget().y.toFixed(2)+',@z:'+immersion.activeCamera.getTarget().z.toFixed(2);
             // Loads assets and displays loading animation until everything is loaded
@@ -895,12 +915,10 @@ class Immersion extends BABYLON.Scene {
                 if (immersion.loadingButton.counter==140) immersion.assetsManager.load();
                 if (immersion.loadingButton.counter<=0) immersion.loadingButton.counter=121;
                 immersion.loadingButton.counter--;
-                var oldText=immersion.loadingButton.text;
-                if (immersion.loadingButton.counter==120 ) immersion.loadingButton.text=immersion.texts.loading;
-                else if (immersion.loadingButton.counter==90 ) immersion.loadingButton.text=immersion.texts.loading+".";
-                else if (immersion.loadingButton.counter==60 ) immersion.loadingButton.text=immersion.texts.loading+"..";
-                else if (immersion.loadingButton.counter==30 ) immersion.loadingButton.text=immersion.texts.loading+"...";
-                if (oldText!==immersion.loadingButton.text && immersion.sizeMb) immersion.loadingButton.text=immersion.loadingButton.text+"\n("+immersion.sizeMb+"Mb)";
+                if (immersion.loadingButton.counter==120 ) immersion.loadingButton.text=immersion.loading;
+                else if (immersion.loadingButton.counter==90 ) immersion.loadingButton.text=immersion.loading+".";
+                else if (immersion.loadingButton.counter==60 ) immersion.loadingButton.text=immersion.loading+"..";
+                else if (immersion.loadingButton.counter==30 ) immersion.loadingButton.text=immersion.loading+"...";
             }
         });
     }
@@ -940,7 +958,7 @@ class Immersion extends BABYLON.Scene {
         warningButton.fontFamily = this.fontName;
         warningButton.fontSize = "20px";
         warningButton.height = "120px";
-        warningButton.width = "280px";
+        warningButton.width = "250px";
         warningButton.fontSize = "15px";
         warningButton.cornerRadius = 10;
         warningButton.alpha=0.8;
@@ -980,7 +998,7 @@ class Immersion extends BABYLON.Scene {
         loadingButton.text="";
         loadingButton.fontSize = "20px";
         loadingButton.height = "75px";
-        loadingButton.width = "200px";
+        loadingButton.width = "250px";
         loadingButton.cornerRadius = 10;
         loadingButton.paddingBottom="0px";
         loadingButton.paddingLeft="30px";
@@ -1072,12 +1090,8 @@ class Immersion extends BABYLON.Scene {
         this.fullscreenUI.addControl(aboutButton); 
         this.aboutButton=aboutButton;
         // next button
-        if (this.style=="light") var nextImage= "/immersion_engine/up-white.png"; else var nextImage= "/immersion_engine/up-black.png";
-        var nextButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-            "nextButton",
-            nextImage
-          );
-        nextButton.fontSize = "13px";
+        var nextButton = BABYLON.GUI.Button.CreateSimpleButton("nextButton", "⇧");
+        nextButton.fontSize = "30px";
         nextButton.height = "250px";
         nextButton.width = "80px";
         nextButton.paddingTop="190px";
@@ -1114,12 +1128,8 @@ class Immersion extends BABYLON.Scene {
         this.fullscreenUI.addControl(nextButton);  
         this.nextButton=nextButton;
         // previous button
-        if (this.style=="light") var previousImage= "/immersion_engine/down-white.png"; else var previousImage= "/immersion_engine/down-black.png";
-        var previousButton = BABYLON.GUI.Button.CreateImageOnlyButton(
-            "nextButton",
-            previousImage
-          );
-        previousButton.fontSize = "13px";
+        var previousButton = BABYLON.GUI.Button.CreateSimpleButton("previousButton", "⇩");
+        previousButton.fontSize = "30px";
         previousButton.height = "320px";
         previousButton.width = "80px";
         previousButton.paddingTop="260px";
@@ -1216,6 +1226,80 @@ class Immersion extends BABYLON.Scene {
             this.actionButton=actionButton;
         }
     };
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // immersion function to pause an object animation when clicked
+    // startBydefault=false to pause the object animation by default
+    // default style of the rollover are wireframes
+    // style="whiter" to display the object brighter instead
+    pauseOnClick(mesh, anim, startByDefault, style) {
+        mesh.startByDefault=startByDefault;
+        if (!startByDefault) anim.pause();
+        mesh.actionManager = new BABYLON.ActionManager(this);
+        if (style=='whiter'){
+            mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){mesh.material.emissiveColor=new BABYLON.Color4(1,1,1);}));
+            mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){mesh.material.emissiveColor=new BABYLON.Color4(0,0,0);}));
+        }else {
+            mesh.edgesColor = new BABYLON.Color4(1,1,1, 1);
+            mesh.enableEdgesRendering();
+            mesh.edgesWidth = 0;
+            mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){mesh.edgesWidth = 0.2;}));
+            mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){mesh.edgesWidth = 0;}));
+            }
+        mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+            mesh.edgesWidth = 0;
+            mesh.material.emissiveColor=new BABYLON.Color4(0,0,0);
+            if (mesh.startByDefault==true) {
+                mesh.startByDefault=false;
+                anim.pause();
+            }else{
+                mesh.startByDefault=true;
+                anim.restart(); 
+            }
+        }));
+        
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // immersion function to make objects appear/disappear when clicked
+    // controler is the mesh to click on
+    // targets is an array of meshes that should appear/disappear
+    // isVisible=false if the target objects should be hidden by default
+    disappearOnClick(controler, targets, isVisible) {
+        controler.switchedOn=isVisible;
+        if (isVisible==false) targets.forEach(element => element.isVisible=false);
+        controler.edgesColor = new BABYLON.Color4(1,1,1, 1);
+        controler.enableEdgesRendering();
+        controler.edgesWidth = 0;
+        controler.actionManager = new BABYLON.ActionManager(this);
+        controler.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){controler.edgesWidth = 0.2;}));
+        controler.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){controler.edgesWidth = 0;}));
+        controler.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+            controler.edgesWidth = 0;
+            controler.material.emissiveColor=new BABYLON.Color4(0,0,0);
+            if (controler.switchedOn==false) {
+                controler.switchedOn=true;
+                targets.forEach(element => element.isVisible=true);
+            }else{
+                controler.switchedOn=false;
+                targets.forEach(element => element.isVisible=false);
+            }
+        }));
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // immersion function to highlight a mesh when pointer is over 
+    highlight(mesh) {
+        mesh.edgesColor = new BABYLON.Color4(1,1,1, 1);
+        mesh.enableEdgesRendering();
+        mesh.edgesWidth = 0;
+        mesh.actionManager = new BABYLON.ActionManager(this);
+        mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){mesh.edgesWidth = 0.2;}));
+        mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){mesh.edgesWidth = 0;}));
+        return mesh.actionManager;
+    }
+
+
 }
 
 
@@ -1266,6 +1350,7 @@ class Stand extends BABYLON.TransformNode {
         this.standBase.applyFog=false;
         this.standBase.material = immersion.selectionMaterial;
         this.standBase.parent=this;
+        this.standBase.hidingDistance=50;
 
         // Highlights the stand base when pointed
 
@@ -1303,6 +1388,7 @@ class Stand extends BABYLON.TransformNode {
 
         // text appearing on the base of stand 
         this.standSign = BABYLON.MeshBuilder.CreatePolyhedron("standBox", {size:0.35,type:3});
+        this.standSign.hidingDistance=50;
         this.standSign.material=immersion.clickMaterial;
         this.standSign.applyFog=false;
         const rotationAnim = new BABYLON.Animation("rotationAnim", "rotation.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
@@ -1316,20 +1402,16 @@ class Stand extends BABYLON.TransformNode {
         this.standSign.parent=this;
         this.standSign.position=new BABYLON.Vector3(0, 0.45, 0);
         // Highlights sign when pointed
-        this.standSign.actionManager = new BABYLON.ActionManager(this.immersion);
-        this.standSign.enableEdgesRendering(); 
-        this.standSign.edgesColor = new BABYLON.Color4(1,1,1, 1);
-        this.standSign.edgesWidth = 0;
         var standSign=this.standSign;
         standSign.stand=this;
-        standSign.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){standSign.edgesWidth = 1;}));
-        standSign.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){standSign.edgesWidth = 0;}));
-        const action = standSign.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){immersion.setCurrentStand(standBase.stand.name);}));
+        var actionManager=immersion.highlight(standSign);
+        const action = actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){immersion.setCurrentStand(standBase.stand.name);}));
         standSign.clickAction=action;
         this.standSignText=BABYLON.MeshBuilder.CreatePlane("standSignText", {height:0.7, width: 0.7, sidelookingAt: BABYLON.Mesh.DOUBLESIDE});
         this.standSignText.position=new BABYLON.Vector3(0, 0.5, 0);
         this.standSignText.material=immersion.interfaceMaterial;
         this.standSignText.isVisible=false;
+        this.standSignText.applyFog=false;
         this.standSignText.parent=this;
         if (this.text){
             if (MODE!="screenshot") this.standSignText.isVisible=true;
@@ -1472,18 +1554,12 @@ class Gate extends Stand {
             if (this.name == "GATE_STAND") {
                 this.standSign.isPickable=false;
                 var standMessage = this.standMessage;
-                this.standSign.counter=151;
                 var standSign=this.standSign;
-                standSign.standMessage=standMessage;
-                standSign.calledOnEveryFrame = (immersion) => {
-                    if (standSign.counter<=0) standSign.counter=151;
-                    standSign.counter--;
-                    if (standSign.counter==150 ) standSign.standMessage.textBlock.text=immersion.texts.loadingShort+"\n...";
-                    else if (standSign.counter==120 ) standSign.standMessage.textBlock.text=immersion.texts.loadingShort+"\n.";
-                    else if (standSign.counter==90 ) standSign.standMessage.textBlock.text=immersion.texts.loadingShort+"\n..";
-                    else  if (standSign.counter==60 && immersion.sizeMb) standSign.standMessage.textBlock.text=immersion.sizeMb+"Mb\n...";
-                    else if (standSign.counter==60 ) standSign.standMessage.textBlock.text=immersion.texts.loadingShort+"\n...";
-                };
+                this.standSign.standMessage=standMessage;
+                standMessage.textBlock.text=immersion.loadingShort;
+                standSign.calledOnEveryFrame = (immersion) => { // displays loading status
+                    standSign.standMessage.textBlock.text=immersion.loadingShort;
+                }
             }else this.activateGate();
         }
     }
@@ -1553,6 +1629,7 @@ class Link extends Gate {
         super(name,options,immersion);
         //this.standSign.isPickable=true;
         this.standSign.material=immersion.clickLinkMaterial;
+        this.standMessage.color = "black";
         this.standSign.applyFog=false;
         
     }
@@ -1603,6 +1680,7 @@ class Display extends Stand {
         if (options.orientationRight) this.orientationRight=options.orientationRight;
         // creates the plinth (main physical part of the display)
         this.plinth= BABYLON.MeshBuilder.CreateBox("plinth", {height: this.height, width: this.width, depth: this.depth});
+        this.plinth.hidingDistance=50;
         this.plinth.parent=this;
         this.plinth.position = new BABYLON.Vector3(0, this.height/2-0.05, this.distance);
         this.plinth.isPickable=false;
@@ -1652,12 +1730,7 @@ class Display extends Stand {
             this.soundButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
             this.soundLinkTexture.addControl(this.soundButton);
             var soundLink=this.soundLink;
-            soundLink.actionManager = new BABYLON.ActionManager(immersion);
-            soundLink.enableEdgesRendering(); 
-            soundLink.edgesColor = new BABYLON.Color4(1,1,1, 1);
-            soundLink.edgesWidth = 0;
-            soundLink.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){soundLink.edgesWidth = 0.2;}));
-            soundLink.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){soundLink.edgesWidth = 0;}));
+            var actionManager=immersion.highlight(soundLink);
             this.soundButton.onPointerUpObservable.add(function() {
                 immersion.currentStand().pressSoundButton();
             });
@@ -1690,13 +1763,8 @@ class Display extends Stand {
             this.actionLinkTexture.addControl(this.actionButton);
             var actionLink=this.actionLink;
             this.actionButton.stand=this;
+            var actionManager=immersion.highlight(actionLink);
             var actionButton=this.actionButton;
-            actionLink.actionManager = new BABYLON.ActionManager(immersion);
-            actionLink.enableEdgesRendering(); 
-            actionLink.edgesColor = new BABYLON.Color4(1,1,1, 1);
-            actionLink.edgesWidth = 0;
-            actionLink.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){actionLink.edgesWidth = 0.2;}));
-            actionLink.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){actionLink.edgesWidth = 0;}));
             actionButton.onPointerUpObservable.add(function() {
                 immersion.playClick();
                 actionButton.stand.onChange.notifyObservers("pressed");
@@ -1774,15 +1842,10 @@ class Display extends Stand {
             }
 
             var standWindow=this.standWindow;
-            standWindow.actionManager = new BABYLON.ActionManager(this.immersion);
-            standWindow.enableEdgesRendering(); 
-            standWindow.edgesColor = new BABYLON.Color4(1,1,1, 1);
-            standWindow.edgesWidth = 0;
+
             standWindow.stand=this;
-            
-            standWindow.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){standWindow.edgesWidth = 0.2;}));
-            standWindow.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){standWindow.edgesWidth = 0;}));
-            standWindow.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
+            var actionManager=immersion.highlight(standWindow);
+            actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
                 standWindow.stand.immersion.playSounds();
                 standWindow.stand.windowSwitch();
             }));
@@ -1895,9 +1958,9 @@ class Display extends Stand {
             this.soundTrack = new BABYLON.Sound(this.sound, this.sound_data, this.immersion, null, {
                 loop: this.loop,
                 autoplay: true,
-                spatialSound: false,
+                spatialSound: true,
                 rolloffFactor: this.factorSound,
-                distanceModel: "exponential"
+                maxDistance:15
             });
             this.sound="onpress"; // doesn't play again the track automatically
             const matrix = this.plinth.computeWorldMatrix(true); 
@@ -1962,9 +2025,8 @@ class Plinth extends Display {
         if (options.rotationE) this.rotationE=options.rotationE;
         this.plinth.isVisible=true; 
         this.plinthBase.isVisible=true; 
-        console.log(options.depth);
         var scaling=options.depth/0.05;
-        this.standWindowBack.scaling.z=scaling;
+        if (this.standWindowBack) this.standWindowBack.scaling.z=scaling;
         // creates exhibit mesh
         if (this.exhibitMesh){
             if (this.exhibitMesh == true) this.exhibitMesh = BABYLON.MeshBuilder.CreateBox("exhibitMesh", {height: 0.2, width: 0.2, depth: 0.2});
@@ -2103,3 +2165,4 @@ class Carousel extends Plinth {
         return introBox;
     }
 }
+

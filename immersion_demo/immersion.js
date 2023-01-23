@@ -3,14 +3,13 @@
 
 // This immersive experience uses the Immersions library under a GNU Lesser General Public License
 // and the babylon.js 3D engine under an Apache-2.0 License (https://www.babylonjs.com/).
-// Unless stated otherwise, this creation is not open source and authors retain their copyright.
-// Learn how to make your own immersion at https://bruchansky.name/immersions-vr-library.
+// Unless stated otherwise, content is not open source and authors retain their copyright.
+// Learn how to make your own immersion at https://bruchansky.name/immersions.
 
-
-
-// General information: x axe goes right, y axe goes up, z axe goes forward
-// Rotations are counter clockwise when looking in the positive direction of the stated axis 
-// Immersions are 500x500m2.
+/* General information */
+// x axe goes right, y axe goes up, z axe goes forward
+// Rotations are counterclockwise
+// Immersions are 500x500m2
 class MyImmersion extends Immersion {
     constructor(engine) { 
         super("demo","light",engine); // name and style of your immersion: either "light" or "dark" (default)
@@ -34,7 +33,7 @@ class MyImmersion extends Immersion {
         this.envNight.skyColor = new BABYLON.Color3(1, 1, 1); 
         this.envNight.fogDensity = 0.05; 
         this.envNight.fogColor = new BABYLON.Color3(0.407, 0.592, 0.992);
-        this.setAtmosphere(this.envOptions,true); // sets the default atmosphere to be used at start 
+        this.setAtmosphere(this.envOptions,true); // sets the default atmosphere 
 
         /*   MATERIALS    */
         // Materials used in your immersion (see babylonjs material documentation)
@@ -48,7 +47,7 @@ class MyImmersion extends Immersion {
         this.wireframeMaterial.wireframe = true;
         this.wireframeMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
         this.wireframeMaterial.ambientColor = new BABYLON.Color3(1, 1, 1);
-        // makes meshes including "neon" in their name glow
+        // makes meshes that include "neon" in their name glow
         this.gl = new BABYLON.GlowLayer("glow", this);
         this.gl.customEmissiveColorSelector = function(mesh, subMesh, material, result) {
             if (mesh.name.includes("neon")) {
@@ -62,9 +61,10 @@ class MyImmersion extends Immersion {
         // Lights used in your immersion (see babylonjs light documentation)
         var light0 =  new BABYLON.HemisphericLight("light0", new BABYLON.Vector3(0, 0, -1), this);
         light0.intensity = 0.5;
-        light0.diffuse = new BABYLON.Color3(1, 1, 1);
-        light0.specular = new BABYLON.Color3(1, 0.607, 0.2);
-        var light1 = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(-2,-1,-1), this); // direction the light is going to
+        light0.specular = new BABYLON.Color3(1, 0.607, 0.2); // highlight color
+        light0.diffuse = new BABYLON.Color3(1, 1, 1); // surrounding color
+        light0.groundColor = new BABYLON.Color3(0, 0, 1); // when hidden from the light
+        var light1 = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(-2,-1,-1), this); // direction of the light 
         light1.intensity=3;
         light1.diffuse = new BABYLON.Color3(0.415, 0.894, 0.345);
         light1.specular = new BABYLON.Color3(0.415, 0.894, 0.345);
@@ -77,31 +77,32 @@ class MyImmersion extends Immersion {
         // Texts and links used in your immersion, in several languages if you wish
         // Stand windows can fit about 200 characters 
         // Stand window titles can fit about 20 characters
-        this.sizeMb="20"; // optional parameter to inform the user of how big is the immersion to download
         var textOptionsEN = new Object();
         textOptionsEN.title="My Immersion"; // default is "Title"
         textOptionsEN.author="My Name"; // default is "Author" (displayed under title)
-        textOptionsEN.about="Welcome to this immersion demo. Visit the open source page to create your own."; // Text displayed on the first welcoming stand
+        textOptionsEN.about="Welcome to this immersion demo."; // Text displayed on the first welcoming stand
+        textOptionsEN.introduction="Welcome to this immersion demo. Visit the open source page to create your own."; // Long text displayed on the entrance board
         textOptionsEN.aboutTextButton="About"; // used in the top right menu and at the end of the immersion, default is "About"
-        textOptionsEN.aboutLink="https://bruchansky.name/2022/02/10/immersions-art/"; // your website link, top right button and stand at the end of the immersion
+        textOptionsEN.aboutLink="https://bruchansky.name/"; // your website link
         textOptionsEN.exitTextButton="Art"; // second button/stand that you can customise at the end of the immersion
-        textOptionsEN.exitLink="https://immersions.art"; // second button/stand you can customise at the end of your immersion
-        textOptionsEN.viewpoint="View-\npoint"; // suggested text for simple stand signs
-        textOptionsEN.audio="Audio\nStand"; //  suggested text for audio stand signs
-        textOptionsEN.text="Text\nDisplay"; //  suggested text for display signs
-        textOptionsEN.exhibit="Exhibit"; //  suggested text for plinth signs
-        textOptionsEN.gate="Gate"; //  suggested text for gate signs
-        textOptionsEN.action="Inter\naction"; // suggested text for interactive display signs
+        textOptionsEN.exitLink="https://bruchansky.name/digressions"; 
+        textOptionsEN.viewpoint="View-\npoint"; // suggested text for simple stands
+        textOptionsEN.audio="Audio\nStand"; //  suggested text for audio stands
+        textOptionsEN.text="Text\nDisplay"; //  suggested text for displays
+        textOptionsEN.exhibit="Exhibit"; //  suggested text for plinths
+        textOptionsEN.gate="Gate"; //  suggested text for gates
+        textOptionsEN.action="Inter\naction"; // suggested text for interactive displays
         this.addTexts("en",textOptionsEN);
         var textOptionsFR = new Object();
         textOptionsFR.title="Mon immersion"; 
         textOptionsFR.author="Mon nom"; 
-        textOptionsFR.about="Bienvenue dans cette immersion. Visite la page open source pour créer la tienne."; 
+        textOptionsFR.about="Bienvenue dans cette immersion."; 
+        textOptionsFR.introduction="Bienvenue dans cette immersion. Visite la page open source pour créer la tienne."; 
         textOptionsFR.aboutTextButton="À\npropos"; 
-        textOptionsFR.aboutLink="https://bruchansky.name/2022/02/10/immersions-art/"; 
+        textOptionsFR.aboutLink="https://bruchansky.name/fr"; 
         textOptionsFR.exitTextButton="Art"; 
-        textOptionsFR.exitLink="https://immersions.art/fr"; 
-        this.addTexts("fr",textOptionsFR); // to use, add "&lang=fr" in your url or as a parameter of your immersion
+        textOptionsFR.exitLink="https://bruchansky.name/digressions"; 
+        this.addTexts("fr",textOptionsFR); // to test, add "&lang=fr" in your url or as a parameter of your immersion
 
         /*   STANDS    */
 
@@ -137,7 +138,7 @@ class MyImmersion extends Immersion {
         this.addStand(viewpoint);
 
         // Simple display with an image and window
-        var imageIntro="/demo/rock.jpg";
+        var imageIntro="/immersion_demo/rock.jpg";
         var imageStand = new Display ("imageStand",{
             image:imageIntro,
             text:this.texts.text, //recommended text for simple displays (appears on signs)
@@ -154,8 +155,8 @@ class MyImmersion extends Immersion {
         var buttonDisplay = new Display ("buttonDisplay",{
             action: "Press here", // text displayed on the action button
             text: "Play", 
-            title:"Interactive Display",
-            description:"Point and select the stones to stop their movement. Press the button to change their shape.",
+            title:"Point and Clicks",
+            description:"Point and click the stones for some default interactions. Press the button to change their shape.",
             windowOpened: true, // opens the window by default
             lineFrom:"imageStand",
             position: new BABYLON.Vector3(-50,0,-80),
@@ -191,7 +192,7 @@ class MyImmersion extends Immersion {
         this.addStand(soundDisplay);
 
         // This is how to load a sound file and attach it to a stand
-        var loading_sound1 = this.assetsManager.addBinaryFileTask("sound1","/demo/welcome.mp3");
+        var loading_sound1 = this.assetsManager.addBinaryFileTask("sound1","/immersion_demo/welcome.mp3");
         loading_sound1.onSuccess = function(task) {soundDisplay.loadSound(task.data);};
 
         // Simple display 
@@ -244,12 +245,13 @@ class MyImmersion extends Immersion {
 
         var immersion=this;
         // this is how to load a 3D scan in babylonjs
-        var loading_rock = this.assetsManager.addMeshTask("loading_rock", "", "/demo/rock/", "textured.obj");
+        var loading_rock = this.assetsManager.addMeshTask("loading_rock", "", "/immersion_demo/rock/", "textured.obj");
         loading_rock.onSuccess = function (task) {
             var rock1 = task.loadedMeshes[0].clone();
             rock1.scalingDeterminant=0.15;
             rock1.rotationQuaternion = null;
             rock1.position=new BABYLON.Vector3(0,-0.115,-0.01);
+            rock1.hidingDistance=20; // displays the rock only when closer to 20 meters (to improve performance)
             exhibitPlinth.setExhibit(rock1);
             var rock2 = task.loadedMeshes[0]; // add another rock in the scene
             rock2.scalingDeterminant=2;
@@ -260,7 +262,7 @@ class MyImmersion extends Immersion {
         // Plinth with exhibit, window, image and sound
         let spherePlinth = BABYLON.MeshBuilder.CreatePolyhedron("sphere-neon", {size:0.1,type:4});
         spherePlinth.material=this.wireframeMaterial;
-        var imageIntro="/demo/immersions.jpg";
+        var imageIntro="/immersion_demo/immersions.jpg";
         var fullPlinth = new Plinth ("fullPlinth",{
             image:imageIntro, 
             sound: "autoplay",
@@ -277,9 +279,8 @@ class MyImmersion extends Immersion {
         },this);
         this.addStand(fullPlinth);
 
-        var loading_sound2 = this.assetsManager.addBinaryFileTask("sound2","/demo/art.mp3");
+        var loading_sound2 = this.assetsManager.addBinaryFileTask("sound2","/immersion_demo/art.mp3");
         loading_sound2.onSuccess = function(task) {fullPlinth.loadSound(task.data);};
-
 
         // Custom size plinth 
         var customPlinth = new Plinth ("customPlinth",{
@@ -300,7 +301,7 @@ class MyImmersion extends Immersion {
 
         var immersion=this;
         // this is how to load a 3D model in babylonjs
-        var loading_model= this.assetsManager.addMeshTask("loading_model", "", "/demo/model/", "scene.gltf");
+        var loading_model= this.assetsManager.addMeshTask("loading_model", "", "/immersion_demo/model/", "scene.gltf");
         loading_model.onSuccess = function (task) {
             var model = task.loadedMeshes[0];
             model.scalingDeterminant=1.5;
@@ -309,7 +310,6 @@ class MyImmersion extends Immersion {
             model.position=new BABYLON.Vector3(0,0,0);
             customPlinth.setExhibit(model);
         };
-
 
         // Sound Plinth (will add automatically a speaker shape)
         var soundPlinth = new Plinth ("soundPlinth",{
@@ -325,7 +325,7 @@ class MyImmersion extends Immersion {
         },this);
         this.addStand(soundPlinth);
 
-        var loading_sound3 = this.assetsManager.addBinaryFileTask("sound3","/demo/open.mp3");
+        var loading_sound3 = this.assetsManager.addBinaryFileTask("sound3","/immersion_demo/open.mp3");
         loading_sound3.onSuccess = function(task) {soundPlinth.loadSound(task.data);};
 
         // Carousels are plinths with some eye-catching text
@@ -344,6 +344,7 @@ class MyImmersion extends Immersion {
         },this);
         this.addStand(carousel);
 
+        // configurable tiles at the entrance of the immersion
         var c1=this.sphere1Material;
         var c2=this.buildingMaterial;
         var floorEntrance=[
@@ -353,12 +354,12 @@ class MyImmersion extends Immersion {
             [c2, c1, c2, c1,c2],
             [c1, c2, c1, c2,c1]
         ];
-        this.activateNavigation(floorEntrance); // line to activate the stands (with an optional parameter to customise tiles) 
+        this.activateNavigation(floorEntrance); // to activate the stands (with an optional parameter to customise tiles) 
 
         
         /*   ASSETS    */
 
-        // this is how to create a wall thanks to the earcut library
+        // this is how to create a wall using the earcut library
         const myShape = [
             new BABYLON.Vector3(-58.5,0,-91),
             new BABYLON.Vector3(-54,0,-91),
@@ -395,46 +396,26 @@ class MyImmersion extends Immersion {
             let sphere = BABYLON.MeshBuilder.CreatePolyhedron("sphere", {size:0.3,type:3});
             sphere.material=this.sphere1Material.clone();
             sphere.position=new BABYLON.Vector3(c-51,1.8,-77);
-            // As seen above, you can add some simple animations to objects
             sphere.animations = [];
             sphere.animations.push(rotationAnim);
             sphere.animations.push(rotationAnim2);
             sphere.anim = this.beginAnimation(sphere, 0, 600, true);
-            sphere.onPause=false;
-            // You can add simple interactions to objects with a babylonjs action manager
-            sphere.actionManager = new BABYLON.ActionManager(this);
-            sphere.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){sphere.material.alpha=0.5;}));
-            sphere.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){sphere.material.alpha=1;}));
-            sphere.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-                if (sphere.onPause==false) {
-                    sphere.onPause=true;
-                    sphere.anim.pause();
-                }else{
-                    sphere.onPause=false;
-                    sphere.anim.restart();
-                }
-            }));
-            // you can add more specific behaviours to objects by adding an calledOnEveryFrame function (will be called by the immersion engine at every frame)
-            sphere.counter=0;
-            sphere.calledOnEveryFrame = (immersion) => {
-                if (sphere.counter==0) sphere.position.y=1.8;
-                if (sphere.onPause==false) {
-                    sphere.counter++;
-                    if (sphere.counter<0) sphere.position.y=sphere.position.y+0.003; else sphere.position.y=sphere.position.y-0.003;
-                }
-                if (sphere.counter>200){
-                    sphere.counter=-200;
-                }
-            };
-            spheres.push(sphere);
 
+            spheres.push(sphere);
         }
+        // to make spheres 2 and 3 appear/disappear when clicking on the first (appear by default)
+        this.disappearOnClick(spheres[0], new Array(spheres[1],spheres[2]), true); 
+        // to pause/resume animations on click
+        // false to pause the animation by default
+        // 'whiter'is the style for rollovers (optional parameter, default is a wireframe style)
+        this.pauseOnClick(spheres[1], spheres[1].anim,false,'whiter');
+        this.pauseOnClick(spheres[2], spheres[2].anim,true);
 
         // This is how to add background sounds to your immersion
         var immersion=this;
-        var bg = this.assetsManager.addBinaryFileTask("bg","/demo/bg.m4a");
+        var bg = this.assetsManager.addBinaryFileTask("bg","/immersion_demo/bg.m4a");
         bg.onSuccess = function(task) {
-            immersion.addSound(task.data,new BABYLON.Vector3(-50,1.5,-77),400) // parameters: sound data, origin of the sound, how far the sound will be heard from
+            immersion.addSound(task.data,new BABYLON.Vector3(-50,1.5,-77),400) // parameters: sound data, origin of the sound, how far the sound is heard from
         };
 
     };
