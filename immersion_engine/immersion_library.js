@@ -35,13 +35,13 @@ function launchImmersion(lang_p,dest_p,mode_p,mute_p,engine_path_p) {
     const urlParams = new URLSearchParams(queryString);
     window.DEVICE="desktop";
     window.LANG="en";
-    window.MUTE=false;
+    window.MUTE=true;
     window.MODE="arc";
     window.DEST=null;
     window.ENGINE_PATH = "/immersion_engine/";
     if (mode_p) MODE=mode_p; else if (mode_p == null && urlParams.has('mode')) MODE = urlParams.get('mode'); 
-    if (dest_p) DEST=dest_p; else if (dest_p == null && urlParams.has('dest')) DEST = urlParams.get('dest'); 
     if (mute_p) MUTE=mute_p; else if (mute_p == null && urlParams.has('mute')) MUTE = urlParams.get('mute'); 
+    if (dest_p) DEST=dest_p; else if (dest_p == null && urlParams.has('dest')) DEST = urlParams.get('dest'); 
     if (lang_p) LANG=lang_p; else if (lang_p == null && urlParams.has('lang')) LANG = urlParams.get('lang');  
     if (engine_path_p == null) window.ENGINE_PATH = "/immersion_engine/"; else window.ENGINE_PATH = engine_path_p;
     const ua = navigator.userAgent;
@@ -131,6 +131,7 @@ class Immersion extends BABYLON.Scene {
         this.name=name;
         this.inXR=false; // tells if the immersion has entered the VR mode
         this.viewHeight=1.75; // default size of the user 
+        this.userPosition="standing";
         this.style=style; // "light" or "dark" style of the immersion, used to adapt navigation colours
         var defaultOptionsScene = {
             createGround: false,
@@ -149,7 +150,6 @@ class Immersion extends BABYLON.Scene {
         this.XRTeleportMaterial.diffuseColor = BABYLON.Color3.White();
         this.XRTeleportMaterial.emissiveColor = BABYLON.Color3.White();
         if (MUTE) this.mute=true; else this.mute=false;
-        this.showTitleImmersion=true; // indicates if the title should appear on the sky after entering the immersion
         this.addDefaultText(); // sets all default text
         BABYLON.Engine.audioEngine.setGlobalVolume(1);
         if (MODE=="dvp") this.debugLayer.show();
@@ -199,18 +199,28 @@ class Immersion extends BABYLON.Scene {
         limit4.checkCollisions = true;
         /* asset management */
         // displays loading icon until the scene is fully loaded
-        this.assetsManager = new BABYLON.AssetsManager(this);
-        this.assetsManager.useDefaultLoadingScreen = false;
-        BABYLON.SceneLoader.ShowLoadingScreen = false;
         var immersion = this;
         immersion.loadingShort="";
         immersion.loading="";
+        this.assetsManager = new BABYLON.AssetsManager(this);
+        this.assetsManager.useDefaultLoadingScreen = true;
+        BABYLON.DefaultLoadingScreen.DefaultLogoUrl = "/immersion_engine/immersions-loading.PNG";
+        //BABYLON.DefaultLoadingScreen.DefaultSpinnerUrl = "/immersion_engine/loadingIcon.png";
+        engine.loadingUIText=immersion.loading;
+        engine.loadingUIBackgroundColor="#333333";
+        
+        engine.displayLoadingUI();
+        
         immersion.assetsManager.onProgress = function (remainingCount, totalCount, lastFinishedTask) { 
             var doneCount=totalCount-remainingCount;
             immersion.loadingShort=immersion.texts.loadingShort+"\n("+doneCount+"/"+totalCount+")";
-            immersion.loading=immersion.texts.loading+"("+doneCount+"/"+totalCount+")";
+            immersion.loading=immersion.texts.loadingText+immersion.texts.title.toUpperCase()+"<br><br>"+immersion.texts.loading+"("+doneCount+"/"+totalCount+")";
+            const loadedCount = totalCount - remainingCount;
+            const percentLoaded = Math.round(loadedCount / totalCount * 100);
+            engine.loadingUIText=immersion.loading;
         };
         immersion.assetsManager.onFinish = function(tasks) {
+            engine.hideLoadingUI();
             immersion.loadingButton.dispose();
             for (const stand of immersion.stands) {
                 if (stand.name == "GATE_STAND") stand.stopLoading();
@@ -242,17 +252,19 @@ class Immersion extends BABYLON.Scene {
     addDefaultText() {
         this.texts=new Object();
         if (LANG=='fr'){
-            this.texts.aboutImmersionsButton="Open\nSource";
+            this.texts.loadingText="<br><br><br><br><br>"
+            this.texts.aboutImmersionsButton="Autres\nprojets";
             this.texts.aboutImmersionsLink="https://bruchansky.name/fr/immersions";
             this.texts.aboutTextButton="À\npropos"; 
-            this.texts.aboutLink="https://bruchansky.name"; 
+            this.texts.aboutLink="https://bruchansky.name/fr"; 
             this.texts.exitTextButton="Autres\nprojets"; 
             this.texts.exitLink="https://bruchansky.name/fr/immersions"; 
+            this.texts.fullText="Explore"; 
+            this.texts.fullLink="https://bruchansky.name/plastic/?lang=fr"; 
             this.texts.inVR="- en VR et avec Audio -";
-            this.texts.hold="Avance ici ➔"; 
             this.texts.loading="Chargement";
             this.texts.loadingShort="Loading";
-            this.texts.unmute="Remet\nle son";
+            this.texts.unmute="Ècoute";
             this.texts.mute="Coupe\nle son";
             this.texts.backPosition="Remise en\nposition";
             this.texts.viewpoint="Vue";
@@ -283,17 +295,19 @@ class Immersion extends BABYLON.Scene {
             this.texts.about="À propos de l'immersion"; 
             this.texts.warning="AUSSI EN RÉALITÉ VIRTUELLE\n\nOuvre la page web sur\nton casque de réalité virtuelle.";
         }else {
-            this.texts.aboutImmersionsButton="Open\nSource";
+            this.texts.loadingText="<br><br><br><br><br>"
+            this.texts.aboutImmersionsButton="Other\nProjects";
             this.texts.aboutImmersionsLink="https://bruchansky.name/immersions";
             this.texts.aboutTextButton="About"; 
             this.texts.aboutLink="https://bruchansky.name"; 
             this.texts.exitTextButton="Other\nProjects"; 
             this.texts.exitLink="https://bruchansky.name/immersions";
+            this.texts.fullText="Explore"; 
+            this.texts.fullLink="https://bruchansky.name/plastic"; 
             this.texts.inVR="- In VR & with Audio -";
-            this.texts.hold="Move forward ➔";
             this.texts.loading="Loading";
             this.texts.loadingShort="Loading";
-            this.texts.unmute="Unmute";
+            this.texts.unmute="Listen";
             this.texts.mute="Mute";
             this.texts.backPosition="Back to\nPosition";
             this.texts.viewpoint="View-\npoint";
@@ -311,7 +325,7 @@ class Immersion extends BABYLON.Scene {
             this.texts.pressHere="Press Here";
             this.texts.shortInstr="Instru-\nctions";
             this.texts.instrTitle="Instructions";
-            this.texts.instructions="Turn your audio on. Once download is complete, click on signs, next & previous buttons to explore.\n\nTip: click anywhere on the screen and hold to look around.";
+            this.texts.instructions="Click on signs, next & previous buttons to explore.\n\nTip: Tap anywhere on the screen and hold to look around.";
             this.texts.nextLinks='Next';
             this.texts.instructionsVR="Once download is complete, move by clicking on signs or selecting a position on the floor and releasing the trigger (see image below).";
             this.texts.enterLink="Press\nto\nEnter";
@@ -352,7 +366,6 @@ class Immersion extends BABYLON.Scene {
                 if (envOptions.fogColor!==null && envOptions.fogColor) this.fogColor = envOptions.fogColor;
                 if (this.fogDensity!==0) this.fogMode = BABYLON.Scene.FOGMODE_EXP;
             }
-            if (envOptions.showTitleImmersion!==null && envOptions.showTitleImmersion!==undefined) this.showTitleImmersion = envOptions.showTitleImmersion;
         } 
     };
     
@@ -372,10 +385,26 @@ class Immersion extends BABYLON.Scene {
                     spatialSound: spatial
                 });
                 if (element.position) m.setPosition(element.position);
-                if (this.mute==true) BABYLON.Engine.audioEngine.setGlobalVolume(0);
                 element.sound=m;
             }
         });
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // mute
+    muteAll () {
+        BABYLON.Engine.audioEngine.setGlobalVolume(0);
+        this.mute=true;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // unmute
+    unmuteAll () {
+        if (!MUTE){
+            this.playSounds ();
+            BABYLON.Engine.audioEngine.setGlobalVolume(1);
+            this.mute=false;
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -391,91 +420,17 @@ class Immersion extends BABYLON.Scene {
     //////////////////////////////////////////////////////////////////////////////////
     // immersion function to play sound on clicks (if file loaded and not on mute)
     playClick () {
-        if (this.click==null){
-            this.click=new BABYLON.Sound("click", this.clickData, this, null, {
-                loop: false,
-                autoplay: true,
-                spatialSound: false
-            });
-        }else this.click.play(0);
-        if (this.mute==true) BABYLON.Engine.audioEngine.setGlobalVolume(0);
+        if (this.mute==false){
+            if (this.click==null){
+                this.click=new BABYLON.Sound("click", this.clickData, this, null, {
+                    loop: false,
+                    autoplay: true,
+                    spatialSound: false
+                });
+            }else this.click.play(0);
+        }
+        this.unmuteAll();
     }
-
-    //////////////////////////////////////////////////////////////////////////////////
-    // immersion function to display the title on the sky
-    showTitle () {
-        if (this.titleIntro==null||this.titleIntro==undefined){
-            if (this.titleImmersion!==null && this.titleImmersion!==undefined) this.titleImmersion.dispose();
-            this.titleImmersion=null;
-            if (this.artistImmersion!==null && this.artistImmersion!==undefined) this.artistImmersion.dispose();
-            this.artistImmersion=null;
-            if (this.showTitleImmersion==true && MODE!=="screenshot"){
-                if (this.style=="light") var bgcolour="black"; else var bgcolour="white";
-                if (this.style=="light") var textcolour="white"; else var textcolour="black";
-                this.titleIntro = BABYLON.MeshBuilder.CreatePlane("titleIntro", {height:10, width: 20});
-                this.titleIntro.applyFog=false;
-                this.titleIntro.position=new BABYLON.Vector3(0, 27, 60);
-                var titleMessage = new BABYLON.GUI.TextBlock();
-                titleMessage.fontFamily = this.fontName;
-                titleMessage.textWrapping=true;
-                titleMessage.text = this.texts.title;
-                titleMessage.color = bgcolour;
-                titleMessage.fontSize = 40;
-                titleMessage.width="400px";
-                var titleTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.titleIntro,400,200);
-                titleTexture.addControl(titleMessage);
-                this.artistIntro = BABYLON.MeshBuilder.CreatePlane("artistIntro", {height:10, width: 20});
-                this.artistIntro.applyFog=false;
-                this.artistIntro.position=new BABYLON.Vector3(0, 22, 65);
-                var artistnameMessage = new BABYLON.GUI.TextBlock();
-                artistnameMessage.fontFamily = this.fontName;
-                artistnameMessage.width="400px";
-                artistnameMessage.textWrapping=true;
-                artistnameMessage.text = this.texts.author;
-                artistnameMessage.color = bgcolour;
-                artistnameMessage.fontSize = 20;
-                var artistnameTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.artistIntro,400,200);
-                artistnameTexture.addControl(artistnameMessage);
-            }
-        }
-    };
-
-    //////////////////////////////////////////////////////////////////////////////////
-    // immersion function to display the title on the sky when starting the immersion
-    showTitleIntro () {
-        if (this.titleImmersion==null||this.titleImmersion==undefined){
-            if (this.titleIntro!==null && this.titleIntro!==undefined) this.titleIntro.dispose();
-            this.titleIntro=null;
-            if (this.artistIntro!==null && this.artistIntro!==undefined) this.artistIntro.dispose();
-            this.artistIntro=null;
-            if (this.style=="light") var bgcolour="black"; else var bgcolour="white";
-            if (this.style=="light") var textcolour="white"; else var textcolour="black";
-            this.titleImmersion = BABYLON.MeshBuilder.CreatePlane("titleImmersion", {height:10, width: 20});
-            this.titleImmersion.applyFog=false;
-            this.titleImmersion.position=new BABYLON.Vector3(0, 14, -135);
-            var titleMessage = new BABYLON.GUI.TextBlock();
-            titleMessage.fontFamily = this.fontName;
-            titleMessage.width="400px";
-            titleMessage.textWrapping=true;
-            titleMessage.text = this.texts.title;
-            titleMessage.color = bgcolour;
-            titleMessage.fontSize = 40;
-            var titleTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.titleImmersion,400,200);
-            titleTexture.addControl(titleMessage);
-            this.artistImmersion = BABYLON.MeshBuilder.CreatePlane("artistImmersion", {height:10, width: 20});
-            this.artistImmersion.applyFog=false;
-            this.artistImmersion.position=new BABYLON.Vector3(0, 9, -135);
-            var artistnameMessage = new BABYLON.GUI.TextBlock();
-            artistnameMessage.fontFamily = this.fontName;
-            artistnameMessage.width="400px";
-            artistnameMessage.textWrapping=true;
-            artistnameMessage.text = this.texts.inVR+"\n\n"+this.texts.author;
-            artistnameMessage.color = bgcolour;
-            artistnameMessage.fontSize = 20;
-            var artistnameTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.artistImmersion,400,200);
-            artistnameTexture.addControl(artistnameMessage);
-        }
-    };
 
     //////////////////////////////////////////////////////////////////////////////////
     // immersion function to initiate stands and add introduction ones
@@ -515,10 +470,21 @@ class Immersion extends BABYLON.Scene {
         this.clickMaterial.emissiveColor = new BABYLON.Color3(0.10196, 0.40000, 0.00000);
         this.clickMaterial.disableLighting=true;
         this.clickMaterial.alpha=0.4;
+        this.ballMaterial = new BABYLON.StandardMaterial(this); 
+        this.ballMaterial.emissiveColor = new BABYLON.Color3(0.9, 0.9, 0.9);
+        this.ballMaterial.alpha=1;
+        this.ballHMaterial = new BABYLON.StandardMaterial(this); 
+        this.ballHMaterial.emissiveColor = new BABYLON.Color3.Green();
+        this.ballHMaterial.alpha=1;
+        this.ballHMaterial.disableLighting=true;
+        this.ballBMaterial = new BABYLON.StandardMaterial(this); 
+        this.ballBMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+        this.ballBMaterial.alpha=0.6;
+        this.ballBMaterial.disableLighting=true;
         this.clickLinkMaterial = new BABYLON.StandardMaterial(this); 
         this.clickLinkMaterial.emissiveColor = new BABYLON.Color3(1,1,0);
         this.clickLinkMaterial.disableLighting=true;
-        this.clickLinkMaterial.alpha=0.9;
+        this.clickLinkMaterial.alpha=0.8;
         // invisible wall to prevent moving backward when starting the immersion
         var protection = BABYLON.MeshBuilder.CreateBox("protection", {height: 5, width: 10, depth: 0.1});
         protection.position = new BABYLON.Vector3(0, 2.5, -181);
@@ -529,14 +495,6 @@ class Immersion extends BABYLON.Scene {
         loading_click.onSuccess = function(task) {
             immersion.clickData=task.data;
         };
-        // empty stand where the user land when starting the immersion
-        var OVERVIEW_STAND = new Stand ("OVERVIEW_STAND",{
-            animationActivated:false,
-            position: new BABYLON.Vector3(0,0,-175),
-            lookingAt: new BABYLON.Vector3(0,2.18,-174),
-            style:"light"
-        },this);
-        this.addStand(OVERVIEW_STAND);
         // first stand with welcome message
         var WELCOME_STAND = new Display ("WELCOME_STAND",{
             windowOpened: true,
@@ -549,42 +507,51 @@ class Immersion extends BABYLON.Scene {
             style:"light"
         },this);
         this.addStand(WELCOME_STAND);
-        // instructions stand
-        var mvtImage = "/immersion_engine/move_tablet.png";
-        if (DEVICE=='mobile'| DEVICE=='tablet') mvtImage = "/immersion_engine/move_tablet.png";
-        var HOWTO_STAND = new Display ("HOWTO_STAND",{
-            image:mvtImage,
-            windowOpened: true,
-            animationActivated:false,
-            lineFrom: "WELCOME_STAND",
-            text: this.texts.shortInstr,
-            title:this.texts.instrTitle,
-            description: this.texts.instructions,
-            position: new BABYLON.Vector3(-1.5,0,-163),
-            lookingAt: new BABYLON.Vector3(-1.28,1.45,-162),
-            style:"light"
-        },this);
-        this.addStand(HOWTO_STAND);
         // "start" stand that is activated when all assets are loaded (see logic in the constructor and Gate class)
         var GATE_STAND = new Gate ("GATE_STAND",{
             gate: "_NEXT",
-            animationActivated:false,
             lineFrom: "WELCOME_STAND",
-            position: new BABYLON.Vector3(0,0,-156.5),
-            lookingAt: new BABYLON.Vector3(0,1.75,-155.5),
+            position: new BABYLON.Vector3(0,0,-161.5),
+            lookingAt: new BABYLON.Vector3(0,1.75,-160.5),
             style:"light"
         },this);
         this.addStand(GATE_STAND);
-        // arrows to show the way
-
-
-
-
+        // balls
+        var ball1 = this.createball(new BABYLON.Vector3(0.7, 0, -161),0.9);
+        var ball2 = this.createball(new BABYLON.Vector3(-0.8, 0, -162),0.8);
+        var ball2 = this.createball(new BABYLON.Vector3(-1, 0, -168.5),0.9);
     };
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // immersion function to create balls where to sit
+    createball(position,sizeBall) {
+        var ball = BABYLON.MeshBuilder.CreateSphere("standBox", {diameter:0.8});
+        ball.hidingDistance=50;
+        ball.material=this.ballMaterial;
+        ball.applyFog=false;
+        ball.scalingDeterminant=sizeBall;
+        ball.rotation.x=Math.random()* Math.PI;
+        ball.rotation.y=Math.random()* Math.PI;
+        ball.rotation.z=Math.random()* Math.PI;
+        ball.position=position;
+        ball.position.y=(sizeBall*0.8)/2-0.03;
+        var ballBorder1 = BABYLON.MeshBuilder.CreateTorus("ballBorder1", {diameter:0.8,thickness:0.02});
+        ballBorder1.material=this.ballBMaterial;
+        ballBorder1.parent=ball;
+        var ballBorder2 = BABYLON.MeshBuilder.CreateTorus("ballBorder2", {diameter:0.7,thickness:0.02});
+        ballBorder2.material=this.ballBMaterial;
+        ballBorder2.position=new BABYLON.Vector3(0, 0.2, 0);
+        ballBorder2.parent=ball;
+        var ballBorder3 = BABYLON.MeshBuilder.CreateTorus("ballBorder3", {diameter:0.7,thickness:0.02});
+        ballBorder3.material=this.ballBMaterial;
+        ballBorder3.position=new BABYLON.Vector3(0, -0.2, 0);
+        ballBorder3.parent=ball;
+        return ball;
+    }
     
     //////////////////////////////////////////////////////////////////////////////////
     // immersion function to add exit stands and activate the navigation
-    activateNavigation(floorEntrance) {
+    activateNavigation() {
         var translation=this.exitPosition; // where exist stands are located
         var rotation=this.exitAngle; // exit stands can all be positioned with an angle
         let matrix = new BABYLON.Matrix();
@@ -649,92 +616,26 @@ class Immersion extends BABYLON.Scene {
             atmosphere:this.exitAtmosphere
         },this);
         this.addStand(ABOUT_IMMERSION);
-        // lines on the floor
-        var c1=this.darkPlinthMaterial.clone();
-        var c2=this.lightPlinthMaterial.clone();
-        c1.alpha=0.2;
-        c2.alpha=0;
-        if (floorEntrance) this.floorEntrance=floorEntrance; else this.floorEntrance=[
-            [c1, c2, c1, c2,c1],
-            [c2, c1, c2, c1,c2],
-            [c1, c2, c1, c2,c1],
-            [c2, c1, c2, c1,c2],
-            [c1, c2, c1, c2,c1]
-        ];
-        for (let h = -2; h <3 ; h++) {
-            for (let v = -2; v <3 ; v++) {
-                var tile = BABYLON.MeshBuilder.CreatePlane("tile", {height:3.4, width: 3.4});
-                tile.position=new BABYLON.Vector3(h*3.4,0.01,-163.2+v*3.4);
-                tile.rotation.x=BABYLON.Tools.ToRadians(90);
-                tile.material=this.floorEntrance[-v+2][h+2];
-            }
-        }
-        // add spheres while downloading
-        const rotationAnim = new BABYLON.Animation("rotationAnim", "rotation.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-        const rotationAnim2 = new BABYLON.Animation("rotationAnim2", "rotation.x", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-        const keys = []; 
-        keys.push({frame: 0,value: 0});
-        keys.push({frame: 300,value: 2 * Math.PI});
-        rotationAnim.setKeys(keys);
-        rotationAnim2.setKeys(keys);
-        let sphere1 = BABYLON.MeshBuilder.CreatePolyhedron("sphere1", {size:1.5,type:3}); // giant sphere appearing at the entrance
-        sphere1.material=this.lightPlinthMaterial;
-        sphere1.position=new BABYLON.Vector3(5,4.5,-161);
-        sphere1.animations = [];
-        sphere1.animations.push(rotationAnim);
-        sphere1.animations.push(rotationAnim2);
-        sphere1.hidingDistance=20;
         
-        let sphere2 = BABYLON.MeshBuilder.CreatePolyhedron("sphere2", {size:0.3,type:3}); // giant sphere appearing at the entrance
-        sphere2.material=this.wireframePlinthMaterial;
-        sphere2.position=new BABYLON.Vector3(-3,2.5,-158);
-        sphere2.animations = [];
-        sphere2.animations.push(rotationAnim);
-        sphere2.animations.push(rotationAnim2);
-        sphere1.anim = this.beginAnimation(sphere1, 0, 600, true);
-        this.pauseOnClick(sphere1, sphere1.anim,true);
-        sphere2.anim = this.beginAnimation(sphere2, 0, 600, true);
-        this.pauseOnClick(sphere2, sphere2.anim,false);
-        sphere2.hidingDistance=20;
-
-        // shows introduction text
-        if (this.texts.introduction) {
-            this.introductionBoard = BABYLON.MeshBuilder.CreatePlane("introductionBoard", {height:3, width: 3.4, sideOrientation: BABYLON.Mesh.DOUBLESIDE});
-            this.introductionBoard.position=new BABYLON.Vector3(1.8,1.8,-159.8);
-            this.introductionBoard.rotation.y=BABYLON.Tools.ToRadians(90);
-            this.introductionBoard.applyFog=false;
-            this.introductionBoard.hidingDistance=20;
-            this.introductionText = new BABYLON.GUI.TextBlock();
-            this.introductionText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            this.introductionText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            this.introductionText.paddingTop="50px";
-            this.introductionText.paddingLeft="50px";
-            this.introductionText.paddingRight="50px";
-            this.introductionText.fontFamily = this.fontName;
-            this.introductionText.text = this.texts.introduction;
-            this.introductionText.textWrapping=true;
-            this.introductionText.color = "white";
-            this.introductionText.height = "600px";
-            this.introductionText.width = "680px";
-            this.introductionText.fontSize = 22;
-            this.introductionTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.introductionBoard,680,600);
-            this.introductionTexture.addControl(this.introductionText);
-            this.introductionTexture.background = "black";
-            this.introductionTexture.alpha=0.8;
-        }
         // shows the UI, sets the first stand, attaches the camera and other init tasks
         this.showNavigation();
         this.goFirstStand();
         this.currentStand().attachCamera(false);
         this.automatedActions();
-        if (MODE=="screenshot") {
+        if (MODE=="screenshot" ||DEST) {
             for (const s of this.stands) {
                 if (s.name!=="WELCOME_STAND"){
                     s.standBase.isVisible=false;
-                    if (s.standSign) s.standSign.isVisible=false;
+                    if (s.standSign) {
+                        s.standSign.isVisible=false;
+                        s.standSign._children[0].isVisible=false;
+                        s.standSign._children[1].isVisible=false;
+                        s.standSign._children[2].isVisible=false;
+                    }
                     if (s.standBox) s.standBox.isVisible=false;
                     if (s.standLines) s.standLines.isVisible=false;
                     if (s.plinth) s.plinth.isVisible=false;
+                    if (DEST && s.exhibitMesh && s.name==DEST) s.plinth.isVisible=true;
                     if (s.plinthBase) s.plinthBase.isVisible=false;
                     if (s.soundLinkBack) s.soundLinkBack.isVisible=false;
                     if (s.soundButton) s.soundButton.isVisible=false;
@@ -763,7 +664,6 @@ class Immersion extends BABYLON.Scene {
             this.currentStandIndex=0;
             for (const s of this.stands) {
                 if (s.name == DEST) this.currentStandIndex=this.stands.indexOf(s);
-                if (this.introText.isVisible==true) this.introText.isVisible=false;
             }
         } else if (this.stands.length>0) {
             this.currentStandIndex=0;
@@ -847,8 +747,10 @@ class Immersion extends BABYLON.Scene {
     //////////////////////////////////////////////////////////////////////////////////
     // immersion function to set up automated behaviour
     automatedActions () {
+
         /* Detects click and pointer interactions */
         this.onPointerObservable.add((pointerInfo) => {
+            if (DEST) this.activeCamera.anim.stop(); // stop rotating animation 
             if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh) {
                 switch (pointerInfo.type) {
                     case BABYLON.PointerEventTypes.POINTERDOWN:
@@ -856,8 +758,6 @@ class Immersion extends BABYLON.Scene {
                         // in dvp mode, display mesh positions when clicked
                         var meshPosition = pointerInfo.pickInfo.pickedMesh.getAbsolutePosition();
                         if (MODE=="dvp") console.log(pointerInfo.pickInfo.pickedMesh.name+': x:'+meshPosition.x.toFixed(1)+',y:'+meshPosition.y.toFixed(1)+',z:'+meshPosition.z.toFixed(1));
-                        // hides intro icon as soon the user moves around
-                        if (this.introText.isVisible==true) this.introText.isVisible=false;
                         // displays "back to position" as soon the user moves around
                         if (this.currentStandIndex>=0){
                             this.currentButton.isVisible=true;
@@ -884,13 +784,39 @@ class Immersion extends BABYLON.Scene {
         var immersion=this;
         immersion.counterCheckDistance=0;
         immersion.registerBeforeRender(function () {
+            // change settings is user is seated
+            if (immersion.inXR==true) {
+                if (immersion.activeCamera.position.y<1.25 && immersion.userPosition=="standing") {
+                    immersion.userPosition="seated";
+                    for (const stand of immersion.stands) {
+                        if (stand.plinth) {
+                            stand.plinth.position.y = stand.plinth.position.y-0.60;
+                            stand.plinth.isVisible=false;
+                            stand.plinthBase.isVisible=false;
+                        }
+                    }
+                }else if (immersion.activeCamera.position.y>=1.25 && immersion.userPosition=="seated") {
+                    immersion.userPosition="standing";
+                    for (const stand of immersion.stands) {
+                        if (stand.plinth) {
+                            stand.plinth.position.y = stand.plinth.position.y+0.60;
+                            stand.plinth.isVisible=true;
+                            stand.plinthBase.isVisible=true;
+                        }
+                    }
+                }
+            }
             // Recomputes camera position based on updated target
-            if (MODE!=="dvp" && immersion.inXR==false && immersion.cameraMoving==true) immersion.activeCamera.rebuildAnglesAndRadius();
+            if (MODE!=="dvp" && immersion.inXR==false && immersion.cameraMoving==true) {
+                immersion.activeCamera.position=immersion.activeCamera._p;
+                immersion.activeCamera.rebuildAnglesAndRadius();
+            }
             // Updates all meshes having a calledOnEveryFrame function
             immersion.meshes.forEach(element => {
                 if (element.calledOnEveryFrame) element.calledOnEveryFrame(immersion);
             });
             immersion.counterCheckDistance++;
+            
             if (immersion.counterCheckDistance==10){
                 immersion.meshes.forEach(element => {
                     if (element.hidingDistance){
@@ -915,10 +841,10 @@ class Immersion extends BABYLON.Scene {
                 if (immersion.loadingButton.counter==140) immersion.assetsManager.load();
                 if (immersion.loadingButton.counter<=0) immersion.loadingButton.counter=121;
                 immersion.loadingButton.counter--;
-                if (immersion.loadingButton.counter==120 ) immersion.loadingButton.text=immersion.loading;
-                else if (immersion.loadingButton.counter==90 ) immersion.loadingButton.text=immersion.loading+".";
-                else if (immersion.loadingButton.counter==60 ) immersion.loadingButton.text=immersion.loading+"..";
-                else if (immersion.loadingButton.counter==30 ) immersion.loadingButton.text=immersion.loading+"...";
+                if (immersion.loadingButton.counter==120 ) engine.loadingUIText=immersion.loading;
+                else if (immersion.loadingButton.counter==90 ) engine.loadingUIText=immersion.loading+".";
+                else if (immersion.loadingButton.counter==60 ) engine.loadingUIText=immersion.loading+"..";
+                else if (immersion.loadingButton.counter==30 ) engine.loadingUIText=immersion.loading+"...";
             }
         });
     }
@@ -935,14 +861,8 @@ class Immersion extends BABYLON.Scene {
     // immersion function for things that need to be updated in VR mode
     updateXRNavigation() {
         this.fullscreenUI.dispose();
+        MUTE=false;
         for (const stand of this.stands) {
-            if (stand.name == "HOWTO_STAND") {
-                stand.image.isVisible=false;
-                stand.imageTexture.addControl(new BABYLON.GUI.Image("image", "/immersion_engine/move_vr.png"), 0, 0);
-                stand.description=this.texts.instructionsVR;
-                stand.standWindowMessage.text="\n"+this.texts.instructionsVR;
-
-            }
         }
     };
 
@@ -950,48 +870,11 @@ class Immersion extends BABYLON.Scene {
     // immersion function to display the 2D navigation
     showNavigation () {
         this.fullscreenUI = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-        if (MODE=="screenshot") this.fullscreenUI.idealHeight = 1200; else this.fullscreenUI.idealHeight = 850;
+        if (MODE=="screenshot") this.fullscreenUI.idealHeight = 1500; 
+        else if (window.innerHeight<=500) this.fullscreenUI.idealHeight = 550; 
+        else this.fullscreenUI.idealHeight = 800;
         if (this.style=="light") var bgcolour="black"; else var bgcolour="white";
-        if (this.style=="light") var textcolour="white"; else var textcolour="black";
-        // warning that the user can experience the immersion in VR
-        var warningButton = BABYLON.GUI.Button.CreateSimpleButton("warningButton", this.texts.warning);
-        warningButton.fontFamily = this.fontName;
-        warningButton.fontSize = "20px";
-        warningButton.height = "120px";
-        warningButton.width = "250px";
-        warningButton.fontSize = "15px";
-        warningButton.cornerRadius = 10;
-        warningButton.alpha=0.8;
-        warningButton.paddingTop="10px";
-        warningButton.paddingLeft="0px";
-        warningButton.color = "white";
-        warningButton.background = "green";
-        warningButton.thickness = 0;
-        warningButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-        warningButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-        warningButton.textHorizontalAlignment="center";
-        if (DEST || MODE=="screenshot" || MODE=="dvp"  ) warningButton.isVisible=false;
-        this.fullscreenUI.addControl(warningButton);   
-        warningButton.onPointerUpObservable.add(function() {
-            warningButton.isVisible=false;
-        });
-        // Text to indicate users they need to press the next button to start
-        var introText = new BABYLON.GUI.TextBlock();
-        introText.fontFamily = this.fontName;
-        introText.text = this.texts.hold; 
-        introText.color = "green";
-        introText.paddingTop="160px";
-        introText.height = "250px";
-        introText.width = "190px";
-        introText.textWrapping=true;
-        introText.lineSpacing = "5px";
-        introText.fontSize = "20px";
-        introText.paddingRight="90px";
-        introText.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-        introText.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        this.introText=introText;
-        if (this.style=="light") 
-        this.fullscreenUI.addControl(introText);   
+        if (this.style=="light") var textcolour="white"; else var textcolour="black"; 
         // loading text 
         var loadingButton = new BABYLON.GUI.TextBlock();
         loadingButton.fontFamily = this.fontName;
@@ -1011,11 +894,12 @@ class Immersion extends BABYLON.Scene {
         this.fullscreenUI.addControl(loadingButton);   
         var fullscreenUI = this.fullscreenUI;
         loadingButton.counter=200; // number used to initiate loading loop 
-        if (this.name=='immersions') loadingButton.isVisible=false;
+        loadingButton.isVisible=false;
         this.loadingButton=loadingButton;
-        let textsoundButton=this.texts.mute;
-        if (MUTE) textsoundButton=this.texts.unmute;
+
         // sound button
+        var textsoundButton=this.texts.mute;
+        if (this.mute==true) textsoundButton=this.texts.unmute;
         var soundButton = BABYLON.GUI.Button.CreateSimpleButton("soundButton", textsoundButton);
         soundButton.fontSize = "14px";
         soundButton.height = "60px";
@@ -1032,59 +916,39 @@ class Immersion extends BABYLON.Scene {
         soundButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
         soundButton.immersion=this;
         soundButton.onPointerUpObservable.add(function() {
-            if (soundButton.immersion.mute==false) {
-                BABYLON.Engine.audioEngine.setGlobalVolume(0);
-                soundButton.textBlock.text=soundButton.immersion.texts.unmute;
-                soundButton.immersion.mute=true;
-            }
-            else if (soundButton.immersion.mute==true) {
-                soundButton.immersion.playSounds();
+            if (soundButton.immersion.mute==true) {
+                MUTE=false;
+                soundButton.immersion.unmuteAll();
                 soundButton.textBlock.text=soundButton.immersion.texts.mute;
-                BABYLON.Engine.audioEngine.setGlobalVolume(1);
-                soundButton.immersion.mute=false;
+            }
+            else if (soundButton.immersion.mute==false) {
+                MUTE=true;
+                soundButton.immersion.muteAll();
+                soundButton.textBlock.text=soundButton.immersion.texts.unmute;
             }
         });
         this.fullscreenUI.addControl(soundButton);
         this.soundButton=soundButton; 
-        // home button
-        var homeButton = BABYLON.GUI.Button.CreateSimpleButton("homeButton", this.texts.aboutImmersionsButton);
-        homeButton.fontSize = "14px";
-        homeButton.height = "120px";
-        homeButton.width = "80px";
-        homeButton.paddingRight = "10px";
-        homeButton.paddingTop="70px";
-        homeButton.cornerRadius = 10;
-        homeButton.color = textcolour;
-        homeButton.thickness = 0;
-        homeButton.fontFamily = this.fontName;
-        homeButton.background = bgcolour;
-        homeButton.alpha=0.8;
-        homeButton.link=this.texts.aboutImmersionsLink;
-        homeButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-        homeButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        homeButton.onPointerUpObservable.add(function() {
-            BABYLON.Engine.audioEngine.setGlobalVolume(0);
-            window.open(homeButton.link);
-        });
-        this.fullscreenUI.addControl(homeButton); 
-        this.homeButton=homeButton;
         // about button
         var aboutButton = BABYLON.GUI.Button.CreateSimpleButton("aboutButton", this.texts.aboutTextButton);
         aboutButton.fontSize = "14px";
-        aboutButton.height = "180px";
+        aboutButton.height = "120px";
         aboutButton.width = "80px";
         aboutButton.paddingRight = "10px";
-        aboutButton.paddingTop="130px";
+        aboutButton.paddingTop="70px";
         aboutButton.fontFamily = this.fontName;
         aboutButton.cornerRadius = 10;
         aboutButton.color = "black";
         aboutButton.thickness = 0;
         aboutButton.background = "yellow";
-        aboutButton.link=this.texts.aboutLink;
+        if (DEST) aboutButton.textBlock.text=this.texts.fullText;
+        if (DEST) aboutButton.link=this.texts.fullLink;
+        else aboutButton.link=this.texts.aboutLink;
         aboutButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
         aboutButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        aboutButton.immersion=this;
         aboutButton.onPointerUpObservable.add(function() {
-            BABYLON.Engine.audioEngine.setGlobalVolume(0);
+            aboutButton.immersion.muteAll();
             window.open(aboutButton.link)
         });
         this.fullscreenUI.addControl(aboutButton); 
@@ -1092,9 +956,9 @@ class Immersion extends BABYLON.Scene {
         // next button
         var nextButton = BABYLON.GUI.Button.CreateSimpleButton("nextButton", "⇧");
         nextButton.fontSize = "30px";
-        nextButton.height = "250px";
+        nextButton.height = "190px";
         nextButton.width = "80px";
-        nextButton.paddingTop="190px";
+        nextButton.paddingTop="130px";
         nextButton.paddingRight="10px";
         nextButton.cornerRadius = 10;
         nextButton.color = "white";
@@ -1105,8 +969,7 @@ class Immersion extends BABYLON.Scene {
         nextButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
         nextButton.immersion=this;
         nextButton.onPointerUpObservable.add(function() {
-            if (nextButton.immersion.introText.isVisible==true) nextButton.immersion.introText.isVisible=false;
-            nextButton.immersion.playSounds();
+            nextButton.immersion.unmuteAll();
             if ((nextButton.immersion.stands[nextButton.immersion.currentStandIndex+1].name == "GATE_STAND") && (nextButton.immersion.stands[nextButton.immersion.currentStandIndex+1].standSign.isPickable==false)){
                 // still loading 
             }else{
@@ -1130,9 +993,9 @@ class Immersion extends BABYLON.Scene {
         // previous button
         var previousButton = BABYLON.GUI.Button.CreateSimpleButton("previousButton", "⇩");
         previousButton.fontSize = "30px";
-        previousButton.height = "320px";
+        previousButton.height = "260px";
         previousButton.width = "80px";
-        previousButton.paddingTop="260px";
+        previousButton.paddingTop="200px";
         previousButton.paddingRight="10px";
         previousButton.cornerRadius = 10;
         previousButton.color = textcolour;
@@ -1143,8 +1006,7 @@ class Immersion extends BABYLON.Scene {
         previousButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
         previousButton.immersion=this;
         previousButton.onPointerUpObservable.add(function() {
-            if (previousButton.immersion.introText.isVisible==true) previousButton.immersion.introText.isVisible=false;
-            previousButton.immersion.playSounds();
+            previousButton.immersion.unmuteAll();
             previousButton.immersion.goPreviousStand();
             previousButton.immersion.currentButton.isVisible=false;
             if (previousButton.immersion.currentStandIndex>0) {
@@ -1158,6 +1020,10 @@ class Immersion extends BABYLON.Scene {
         });
         this.fullscreenUI.addControl(previousButton); 
         if (this.currentStandIndex!==null && !DEST) previousButton.isVisible=false; else previousButton.isVisible=true;
+        if (DEST){
+            nextButton.isVisible=false;
+            previousButton.isVisible=false;
+        }
         this.previousButton=previousButton;
         // current button ("back to position")
         var currentButton = BABYLON.GUI.Button.CreateSimpleButton("currentButton", this.texts.backPosition);
@@ -1183,9 +1049,10 @@ class Immersion extends BABYLON.Scene {
         }
         currentButton.immersion=this;
         currentButton.onPointerUpObservable.add(function() {
-            currentButton.immersion.playSounds(immersion);
+            currentButton.immersion.unmuteAll();
             currentButton.isVisible=false;
             currentButton.immersion.currentStand().attachCamera(false);
+
         });
         this.fullscreenUI.addControl(currentButton);   
         currentButton.isVisible=false;
@@ -1294,8 +1161,18 @@ class Immersion extends BABYLON.Scene {
         mesh.enableEdgesRendering();
         mesh.edgesWidth = 0;
         mesh.actionManager = new BABYLON.ActionManager(this);
-        mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){mesh.edgesWidth = 0.2;}));
-        mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){mesh.edgesWidth = 0;}));
+        var immersion=this;
+        mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
+            if (mesh.name=="standBox"){
+                mesh.material=immersion.ballHMaterial;
+            } else mesh.edgesWidth = 0.2;
+        }));
+        mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
+            if (mesh.name=="standBox"){
+                if (mesh.parent.gate && mesh.parent.gate.includes('/')) mesh.material=immersion.clickLinkMaterial;
+                else mesh.material=immersion.ballMaterial;
+            } else mesh.edgesWidth = 0;
+        }));
         return mesh.actionManager;
     }
 
@@ -1387,10 +1264,11 @@ class Stand extends BABYLON.TransformNode {
         }
 
         // text appearing on the base of stand 
-        this.standSign = BABYLON.MeshBuilder.CreatePolyhedron("standBox", {size:0.35,type:3});
+        this.standSign=this.immersion.createball(new BABYLON.Vector3(0, 0.4, 0),1);
+        //this.standSign = BABYLON.MeshBuilder.CreatePolyhedron("standBox", {size:0.35,type:3});
         this.standSign.hidingDistance=50;
-        this.standSign.material=immersion.clickMaterial;
         this.standSign.applyFog=false;
+        /*
         const rotationAnim = new BABYLON.Animation("rotationAnim", "rotation.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
         const keys = []; 
         keys.push({frame: 0,value: 0});
@@ -1399,8 +1277,9 @@ class Stand extends BABYLON.TransformNode {
         this.standSign.animations = [];
         this.standSign.animations.push(rotationAnim);
         this.standSign.anim = immersion.beginAnimation(this.standSign, 0, 600, true);
+        */
         this.standSign.parent=this;
-        this.standSign.position=new BABYLON.Vector3(0, 0.45, 0);
+        //this.standSign.position=new BABYLON.Vector3(0, 0.45, 0);
         // Highlights sign when pointed
         var standSign=this.standSign;
         standSign.stand=this;
@@ -1408,13 +1287,16 @@ class Stand extends BABYLON.TransformNode {
         const action = actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){immersion.setCurrentStand(standBase.stand.name);}));
         standSign.clickAction=action;
         this.standSignText=BABYLON.MeshBuilder.CreatePlane("standSignText", {height:0.7, width: 0.7, sidelookingAt: BABYLON.Mesh.DOUBLESIDE});
-        this.standSignText.position=new BABYLON.Vector3(0, 0.5, 0);
+        this.standSignText.position=new BABYLON.Vector3(0, 0.47, -0.45);
         this.standSignText.material=immersion.interfaceMaterial;
         this.standSignText.isVisible=false;
+        this.standSignText.isPickable=false;
         this.standSignText.applyFog=false;
         this.standSignText.parent=this;
         if (this.text){
-            if (MODE!="screenshot") this.standSignText.isVisible=true;
+            if (MODE!="screenshot" && !DEST) {
+                this.standSignText.isVisible=true;
+            }
             this.standMessage = BABYLON.GUI.Button.CreateSimpleButton("standMessage", "");
             this.standMessage.thickness = 0;
             this.standMessage.textBlock.text = this.text;
@@ -1423,7 +1305,7 @@ class Stand extends BABYLON.TransformNode {
             this.standMessage.height = "256px";
             this.standMessage.width = "256px";
             this.standMessage.textWrapping=true;
-            this.standMessage.color = "white";
+            this.standMessage.color = "black";
             this.standTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.standSignText,256,256);
             this.standTexture.alpha = 0.7;
 
@@ -1432,7 +1314,7 @@ class Stand extends BABYLON.TransformNode {
             var standMessage = this.standMessage;
             standMessage.immersion=immersion;
             standMessage.onPointerUpObservable.add(function() {
-                standMessage.immersion.playSounds();
+                standMessage.immersion.unmuteAll();
             });
         }
     }
@@ -1441,25 +1323,42 @@ class Stand extends BABYLON.TransformNode {
     // stand function to perform automated tasks when landing
     doWhenArriving(){
         this.immersion.setAtmosphere(this.standBase.atmosphere,false);
-        if (this.immersion.currentStandIndex==0) this.immersion.showTitleIntro();else this.immersion.showTitle(); // shows or not immersion title
-        if (this.standSign && MODE!=="screenshot"){
+        if (this.standSign && MODE!=="screenshot" && !DEST){
             this.standSign.isVisible=false;
+            this.standSign._children[0].isVisible=false;
+            this.standSign._children[1].isVisible=false;
+            this.standSign._children[2].isVisible=false;
             this.standSignText.isVisible=false;
             if (this.description) this.standWindow.isVisible=true;
             if (this.description) this.standWindowBack.isVisible=true;
             if (this.description) this.standWindowBack.isPickable=true;
+            if (this.soundLinkBack) this.soundLinkBack.isVisible=true;
+            if (this.soundLink) this.soundLink.isVisible=true;
+            if (this.soundButton) this.soundButton.isVisible=true;
+            if (this.actionLinkBack) this.actionLinkBack.isVisible=true;
+            if (this.actionLink) this.actionLink.isVisible=true;
+            if (this.actionButton) this.actionButton.isVisible=true;
         }
     }
 
     //////////////////////////////////////////////////////////////////////////////////
     // stand function to perform automated tasks when leaving 
     doWhenLeaving(){
-        if (this.standSign && MODE!=="screenshot"){
+        if (this.standSign && MODE!=="screenshot" && !DEST){
             this.standSign.isVisible=true;
+            this.standSign._children[0].isVisible=true;
+            this.standSign._children[1].isVisible=true;
+            this.standSign._children[2].isVisible=true;
             if (this.text) this.standSignText.isVisible=true;
             if (this.description) this.standWindow.isVisible=false;
             if (this.description) this.standWindowBack.isVisible=false;
             if (this.description) this.standWindowBack.isPickable=false;
+            if (this.soundLinkBack) this.soundLinkBack.isVisible=false;
+            if (this.soundLink) this.soundLink.isVisible=false;
+            if (this.soundButton) this.soundButton.isVisible=false;
+            if (this.actionLinkBack) this.actionLinkBack.isVisible=false;
+            if (this.actionLink) this.actionLink.isVisible=false;
+            if (this.actionButton) this.actionButton.isVisible=false;
         }
     }
 
@@ -1467,16 +1366,37 @@ class Stand extends BABYLON.TransformNode {
     // stand function to move the camera when selected
     attachCamera(withAnimation){
         if (withAnimation==true && this.animationActivated!==null && this.animationActivated==false) withAnimation=false;
-        if (withAnimation && this.immersion.inXR==false && MODE!=="dvp") {
+        if (DEST && this.immersion.cameraRotating==null && this.immersion.inXR==false){
+            this.immersion.activeCamera.position.x=this.position.x;
+            this.immersion.activeCamera.position.y= this.immersion.viewHeight;
+            this.immersion.activeCamera.position.z=this.position.z;
+            if (this.immersion.inXR==false) this.immersion.activeCamera.setTarget(this.lookingAt.clone());
+            if (this.immersion.inXR==false && MODE!=="dvp") this.immersion.activeCamera.rebuildAnglesAndRadius();
+            const FRAMES_PER_SECOND = 30;
+            const TO_FRAME = 1000;
+            var cameraRot = new BABYLON.Animation("cameraRot", "alpha", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+            const keysr = []; 
+            this.immersion.cameraRotating=true;
+            var r = this.immersion.activeCamera.alpha;
+            keysr.push({frame: 0,value: r});
+            keysr.push({frame: TO_FRAME,value: r+2*Math.PI});
+            cameraRot.setKeys(keysr);
+            this.immersion.activeCamera.animations = [];
+            this.immersion.activeCamera.animations.push(cameraRot);
+            this.immersion.activeCamera.anim = this.immersion.beginAnimation(this.immersion.activeCamera, 0, TO_FRAME, true);
+        } else if (withAnimation && this.immersion.inXR==false && MODE!=="dvp") {
+            this.immersion.nextButton.isEnabled=false;
+            this.immersion.previousButton.isEnabled=false;
             const FRAMES_PER_SECOND = 30;
             const TO_FRAME = 50;
             this.immersion.cameraMoving=true;
-            var cameraAnimx = new BABYLON.Animation("cameraAnimx", "position.x", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            var cameraAnimy = new BABYLON.Animation("cameraAnimy", "position.y", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            var cameraAnimz = new BABYLON.Animation("cameraAnimz", "position.z", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            const cameraAnimtx = new BABYLON.Animation("cameraAnimtx", "target.x", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            const cameraAnimty= new BABYLON.Animation("cameraAnimty", "target.y", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            const cameraAnimtz = new BABYLON.Animation("cameraAnimtz", "target.z", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            this.immersion.activeCamera._p=new BABYLON.Vector3(0, 0,0);
+            var cameraAnimx = new BABYLON.Animation("cameraAnimx", "_p.x", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            var cameraAnimy = new BABYLON.Animation("cameraAnimy", "_p.y", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            var cameraAnimz = new BABYLON.Animation("cameraAnimz", "_p.z", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            var cameraAnimtx = new BABYLON.Animation("cameraAnimtx", "target.x", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            var cameraAnimty= new BABYLON.Animation("cameraAnimty", "target.y", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            var cameraAnimtz = new BABYLON.Animation("cameraAnimtz", "target.z", FRAMES_PER_SECOND, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
             const keysx = []; 
             keysx.push({frame: 0,value: this.immersion.activeCamera.position.x});
             keysx.push({frame: TO_FRAME,value: this.position.x});
@@ -1508,11 +1428,16 @@ class Stand extends BABYLON.TransformNode {
             this.immersion.activeCamera.animations.push(cameraAnimtx);
             this.immersion.activeCamera.animations.push(cameraAnimty);
             this.immersion.activeCamera.animations.push(cameraAnimtz);
+
+
             this.immersion.activeCamera.anim = this.immersion.beginAnimation(this.immersion.activeCamera, 0, TO_FRAME, false);
+            
             var immersion=this.immersion;
             var lookingAt=this.lookingAt.clone();
             var position=this.position;
             this.immersion.activeCamera.anim.onAnimationEnd = function(){
+                immersion.nextButton.isEnabled=true;
+                immersion.previousButton.isEnabled=true;
                 immersion.activeCamera.setTarget(lookingAt);
                 immersion.activeCamera.position.x=position.x;
                 immersion.activeCamera.position.y= immersion.viewHeight;
@@ -1522,7 +1447,7 @@ class Stand extends BABYLON.TransformNode {
             }
         } else {
             this.immersion.activeCamera.position.x=this.position.x;
-            this.immersion.activeCamera.position.y= this.immersion.viewHeight;
+            if (this.immersion.inXR==false) this.immersion.activeCamera.position.y= this.immersion.viewHeight;
             this.immersion.activeCamera.position.z=this.position.z;
             if (this.immersion.inXR==false) this.immersion.activeCamera.setTarget(this.lookingAt.clone());
             if (this.immersion.inXR==false && MODE!=="dvp") this.immersion.activeCamera.rebuildAnglesAndRadius();
@@ -1595,7 +1520,7 @@ class Gate extends Stand {
             this.immersion.activeCamera.anim.onAnimationEnd = function(){
                 immersion.activeCamera.setTarget(lookingAt);
                 immersion.activeCamera.position.x=position.x;
-                immersion.activeCamera.position.y= immersion.viewHeight;
+                if (immersion.inXR==false) immersion.activeCamera.position.y= immersion.viewHeight;
                 immersion.activeCamera.position.z=position.z;
                 immersion.activeCamera.rebuildAnglesAndRadius();
                 immersion.cameraMoving=false;
@@ -1631,13 +1556,16 @@ class Link extends Gate {
         this.standSign.material=immersion.clickLinkMaterial;
         this.standMessage.color = "black";
         this.standSign.applyFog=false;
+        this.standSign._children[0].isVisible=false;
+        this.standSign._children[1].isVisible=false;
+        this.standSign._children[2].isVisible=false;
         
     }
 
     // Overwrites the attachCamera function to open a window when clicked 
     attachCamera(withAnimation){
         if (this.gate && this.gate.includes('/')){
-            BABYLON.Engine.audioEngine.setGlobalVolume(0);
+            this.immersion.muteAll();
             window.open(this.gate);
             // temporary solution 
             if (this.immersion.inXR==true) {
@@ -1664,7 +1592,7 @@ class Display extends Stand {
         super(name,options,immersion)
         if (options.title) this.title=options.title; // appears in the stand window
         if (options.description) this.description=options.description; // appears in the stand window
-        if (options.windowOpened && MODE!=="screenshot") this.windowOpened=options.windowOpened;
+        if (options.windowOpened && MODE!=="screenshot" && !DEST) this.windowOpened=options.windowOpened;
         if (options.image!==null && options.image) this.imageURL=options.image;
         if (options.action) this.action=options.action 
         if (options.sound!==null && options.sound) this.sound=options.sound; // only if sound
@@ -1685,6 +1613,7 @@ class Display extends Stand {
         this.plinth.position = new BABYLON.Vector3(0, this.height/2-0.05, this.distance);
         this.plinth.isPickable=false;
         this.plinth.material = this.styleMaterial;
+
         if (this.orientationRight) {
             this.plinth.position.x=this.plinth.position.x+this.orientationRight;
         } else if (this.orientationLeft) {
@@ -1703,7 +1632,7 @@ class Display extends Stand {
         this.plinthBase.rotation.z=BABYLON.Tools.ToRadians(-90);
         this.plinthBase.position = new BABYLON.Vector3(this.width/2, -this.height/2, -0.35);
         this.plinthBase.material = this.styleMaterial;
-        this.plinthBase.isVisible=false; 
+        //this.plinthBase.isVisible=false; 
         // adds button to start sound file if any (see demo file) 
         if (this.sound){
             this.plinth.isVisible=true; 
@@ -1711,10 +1640,10 @@ class Display extends Stand {
             this.soundLinkBack = BABYLON.MeshBuilder.CreateBox("soundBack", {height:0.06,width:0.18,depth:0.02});
             this.soundLinkBack.parent = this.plinth;
             this.soundLinkBack.material=this.styleMaterial;
-            this.soundLinkBack.position=new BABYLON.Vector3(-this.width/2+0.11, this.height/2-0.05,-this.depth/2-0.001);
+            this.soundLinkBack.position=new BABYLON.Vector3(0, this.height/2-0.05,-this.depth/2-0.001);
             this.soundLink = BABYLON.MeshBuilder.CreatePlane("soundButton", {height:0.06, width: 0.18, sidelookingAt: BABYLON.Mesh.DOUBLESIDE});
             this.soundLink.parent = this.plinth;
-            this.soundLink.position=new BABYLON.Vector3(-this.width/2+0.11, this.height/2-0.05,-this.depth/2-0.012);
+            this.soundLink.position=new BABYLON.Vector3(0, this.height/2-0.05,-this.depth/2-0.012);
             this.soundLinkTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.soundLink,360,120);
             this.soundLinkTexture.background = "black";
             this.soundButton = BABYLON.GUI.Button.CreateSimpleButton("standWindowButton", "");
@@ -1734,6 +1663,9 @@ class Display extends Stand {
             this.soundButton.onPointerUpObservable.add(function() {
                 immersion.currentStand().pressSoundButton();
             });
+            this.soundLinkBack.isVisible=false;
+            this.soundLink.isVisible=false;
+            this.soundButton.isVisible=false;
         }
         // adds a button for any action if configured (see demo file) 
         if (this.action){
@@ -1743,10 +1675,10 @@ class Display extends Stand {
             this.actionLinkBack = BABYLON.MeshBuilder.CreateBox("actionBack", {height:0.06,width:0.18,depth:0.02});
             this.actionLinkBack.parent = this.plinth;
             this.actionLinkBack.material=this.styleMaterial;
-            this.actionLinkBack.position=new BABYLON.Vector3(-this.width/2+0.11, this.height/2-0.05,-this.depth/2-0.001);
+            this.actionLinkBack.position=new BABYLON.Vector3(0, this.height/2-0.05,-this.depth/2-0.001);
             this.actionLink = BABYLON.MeshBuilder.CreatePlane("actionButton", {height:0.06, width: 0.18, sidelookingAt: BABYLON.Mesh.DOUBLESIDE});
             this.actionLink.parent = this.plinth;
-            this.actionLink.position=new BABYLON.Vector3(-this.width/2+0.11, this.height/2-0.05,-this.depth/2-0.012);
+            this.actionLink.position=new BABYLON.Vector3(0, this.height/2-0.05,-this.depth/2-0.012);
             this.actionLinkTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(this.actionLink,360,120);
             this.actionLinkTexture.background = "black";
             this.actionButton = BABYLON.GUI.Button.CreateSimpleButton("standWindowButton", "");
@@ -1769,6 +1701,9 @@ class Display extends Stand {
                 immersion.playClick();
                 actionButton.stand.onChange.notifyObservers("pressed");
             });
+            this.actionLinkBack.isVisible=false;
+            this.actionLink.isVisible=false;
+            this.actionButton.isVisible=false;
         }
         // adds window if any text
         if (this.description){
@@ -1846,7 +1781,7 @@ class Display extends Stand {
             standWindow.stand=this;
             var actionManager=immersion.highlight(standWindow);
             actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function(ev){
-                standWindow.stand.immersion.playSounds();
+                standWindow.stand.immersion.unmuteAll();
                 standWindow.stand.windowSwitch();
             }));
         }
@@ -1950,32 +1885,34 @@ class Display extends Stand {
         }
     }
     playSound () { // plays the sound and stop those from other stands
-        for (const stand of this.immersion.stands) {
-            if (stand.sound_data) stand.stopSound();
-        }
-        this.soundButton.textBlock.text=this.immersion.texts.pause;
-        if (this.soundTrack==null){ // if first time playing
-            this.soundTrack = new BABYLON.Sound(this.sound, this.sound_data, this.immersion, null, {
-                loop: this.loop,
-                autoplay: true,
-                spatialSound: true,
-                rolloffFactor: this.factorSound,
-                maxDistance:15
-            });
-            this.sound="onpress"; // doesn't play again the track automatically
-            const matrix = this.plinth.computeWorldMatrix(true); 
-            const soundPosition = BABYLON.Vector3.TransformCoordinates(new BABYLON.Vector3(this.plinth.position.x, 1.5, this.plinth.position.z), matrix); 
-            this.soundTrack.setPosition(soundPosition);
-            if (this.immersion.mute==true) BABYLON.Engine.audioEngine.setGlobalVolume(0);
-            this.soundTrack.immersion=this.immersion;
-            this.soundTrack.onended = function() {
-                for (const stand of this.immersion.stands) {
-                    if (stand.sound_data) stand.stopSound();
-                }
+        if (this.immersion.mute==false){
+            for (const stand of this.immersion.stands) {
+                if (stand.sound_data) stand.stopSound();
             }
-        }else {
-            this.soundTrack.play(0);
-            if (this.immersion.mute==true) BABYLON.Engine.audioEngine.setGlobalVolume(0);
+            this.soundButton.textBlock.text=this.immersion.texts.pause;
+            if (this.soundTrack==null){ // if first time playing
+                this.soundTrack = new BABYLON.Sound(this.sound, this.sound_data, this.immersion, null, {
+                    loop: this.loop,
+                    autoplay: true,
+                    spatialSound: true,
+                    rolloffFactor: this.factorSound,
+                    maxDistance:15
+                });
+                this.sound="onpress"; // doesn't play again the track automatically
+                const matrix = this.plinth.computeWorldMatrix(true); 
+                const soundPosition = BABYLON.Vector3.TransformCoordinates(new BABYLON.Vector3(this.plinth.position.x, 1.5, this.plinth.position.z), matrix); 
+                this.soundTrack.setPosition(soundPosition);
+                this.immersion.unmuteAll();
+                this.soundTrack.immersion=this.immersion;
+                this.soundTrack.onended = function() {
+                    for (const stand of this.immersion.stands) {
+                        if (stand.sound_data) stand.stopSound();
+                    }
+                }
+            }else {
+                this.soundTrack.play(0);
+                this.immersion.unmuteAll();
+            }
         }
     }
     stopSound(){ 
@@ -2020,7 +1957,7 @@ class Plinth extends Display {
         if (options.depth==null) options.depth=0.3;
         if (options.distance==null) options.distance=0.7+options.depth;
         if (options.orientationPlinth!==null && options.orientationPlinth) options.distance=1.2;
-        super(name,options,immersion)
+        super(name,options,immersion);
         if (options.exhibit) this.exhibitMesh=options.exhibit;
         if (options.rotationE) this.rotationE=options.rotationE;
         this.plinth.isVisible=true; 
