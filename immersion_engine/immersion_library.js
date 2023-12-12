@@ -264,7 +264,7 @@ class Immersion extends BABYLON.Scene {
             this.texts.inVR="- en VR et avec Audio -";
             this.texts.loading="Chargement";
             this.texts.loadingShort="Loading";
-            this.texts.unmute="Ècoute";
+            this.texts.unmute="Son";
             this.texts.mute="Coupe\nle son";
             this.texts.backPosition="Remise en\nposition";
             this.texts.viewpoint="Vue";
