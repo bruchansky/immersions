@@ -81,11 +81,11 @@ class MyImmersion extends Immersion {
         textOptionsEN.title="My Immersion"; // default is "Title"
         textOptionsEN.author="My Name"; // default is "Author" (displayed under title)
         textOptionsEN.about="Welcome to this immersion demo."; // Text displayed on the first welcoming stand
-        textOptionsEN.introduction="Welcome to this immersion demo. Visit the open source page to create your own."; // Long text displayed on the entrance board
         textOptionsEN.aboutTextButton="About"; // used in the top right menu and at the end of the immersion, default is "About"
         textOptionsEN.aboutLink="https://bruchansky.name/"; // your website link
         textOptionsEN.exitTextButton="Art"; // second button/stand that you can customise at the end of the immersion
         textOptionsEN.exitLink="https://bruchansky.name/digressions"; 
+        textOptionsEN.fullLink="https://bruchansky.name/plastic"; // url used in preview mode (dest parameter) to explore full experience
         textOptionsEN.viewpoint="View-\npoint"; // suggested text for simple stands
         textOptionsEN.audio="Audio\nStand"; //  suggested text for audio stands
         textOptionsEN.text="Text\nDisplay"; //  suggested text for displays
@@ -97,7 +97,6 @@ class MyImmersion extends Immersion {
         textOptionsFR.title="Mon immersion"; 
         textOptionsFR.author="Mon nom"; 
         textOptionsFR.about="Bienvenue dans cette immersion."; 
-        textOptionsFR.introduction="Bienvenue dans cette immersion. Visite la page open source pour créer la tienne."; 
         textOptionsFR.aboutTextButton="À\npropos"; 
         textOptionsFR.aboutLink="https://bruchansky.name/fr"; 
         textOptionsFR.exitTextButton="Art"; 
@@ -344,17 +343,7 @@ class MyImmersion extends Immersion {
         },this);
         this.addStand(carousel);
 
-        // configurable tiles at the entrance of the immersion
-        var c1=this.sphere1Material;
-        var c2=this.buildingMaterial;
-        var floorEntrance=[
-            [c1, c2, c1, c2,c1],
-            [c2, c1, c2, c1,c2],
-            [c1, c2, c1, c2,c1],
-            [c2, c1, c2, c1,c2],
-            [c1, c2, c1, c2,c1]
-        ];
-        this.activateNavigation(floorEntrance); // to activate the stands (with an optional parameter to customise tiles) 
+        this.activateNavigation(); // to activate the stands 
 
         
         /*   ASSETS    */

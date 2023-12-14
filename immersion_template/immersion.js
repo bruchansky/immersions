@@ -39,7 +39,6 @@ class MyImmersion extends Immersion {
         textOptions.title="My Immersion";
         textOptions.author="My Name"; 
         textOptions.about="Welcome to this immersion (short text)."; 
-        textOptions.introduction="About this immersion (long text)."; 
         textOptions.aboutTextButton="About"; 
         textOptions.aboutLink="https://bruchansky.name/"; /* your website link */
         textOptions.exitTextButton="Art"; 

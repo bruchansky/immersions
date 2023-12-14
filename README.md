@@ -5,13 +5,15 @@
 
 The Immersion open source library allows anyone with basic javascript knowledge to create immersive experiences in virtual reality and on the Web. It is based on [WebXR](https://immersiveweb.dev/) and uses the [babylon.js](https://www.babylonjs.com/) real time 3D engine.
 
-The indie project was initially developed as part of a [platform](https://bruchansky.name/immersions/) dedicated to immersive art on the web (January 2021). I didn’t want to depend on commercial spaces for the artworks, and to be restricted by game and artificial scarcity mechanics found on other VR platforms.
+The indie project was initially developed as part of a [platform](https://bruchansky.name/immersions/) dedicated to immersive art on the web (January 2021). I didn’t want to rely on commercial spaces for my artworks, and to be restricted by game and artificial scarcity mechanics found on other VR platforms.
 
 Since then, I keep updating the engine based on my own artistic needs, and everyone is welcomed to contribute.
 
-I believe the web is still the best metaverse out there: anybody can publish on it and it can now deliver truly immersive journeys.
+I believe the web is still the best metaverse out there: it is free and without any restrictions.
 
-* **Point and Click 3D Spaces**:create viewpoints, add 3D exhibits, text and audio to tell your story.
+Features:
+
+* **Point and Click Navigation**:create viewpoints, add 3D exhibits, text and audio to tell your story.
 
 * **Cross-platform**:works from most browsers on mobile, desktop and virtual reality headsets (tested on Meta Quest 2 and Pico).
 
@@ -47,7 +49,7 @@ Please credit the library and babylon.js in your source files (see [template](ht
 2.  Install a web server on your local machine so that you can test your immersion. I personally use Python [SimpleHTTPServer](https://www.linuxjournal.com/content/tech-tip-really-simple-http-server-python). 
 3.  Start your local server: open a terminal window (I use [iTerm2](https://iterm2.com/) on Mac and Windows Terminal on Windows), go to the directory where you've downloaded the 3 subfolders, and start your server with the following command: “python3 -m http.server 9000” (might be another port).
 4.  Open your browser (chrome for instance) and test the downloaded template: localhost:9000/immersion_template/index.html.
-5.  Test the downloaded demo: localhost:9000/immersion_demo/index.html.
+5.  Run the demo: localhost:9000/immersion_demo/index.html.
 6.  Both should look the same than on the two urls provided above.
 7.  That’s it, everything is installed and you’re ready to develop.
 
@@ -62,14 +64,14 @@ Please credit the library and babylon.js in your source files (see [template](ht
         *   'dvp' is a universal camera navigation with extra information for development (camera and mesh positions, babylonjs debug console).
         *    'screenshot' mode hides all stands, useful for video and image captures.
     *   "mute" parameter is false by default, useful when developing.
-    *   "dest" parameter is like an html anchor but in 3D spaces, it goes directly to the stand with that name (to be used only for development atm).
+    *   "dest" parameter is like an html anchor but in 3D spaces, it goes directly to the stand with that name. This mode is optimised for screen previews (no navigation, bigger buttons, camera rotating aound the destination)
 
 ## Create your 3D assets
 
-Here are some tips on how to easily create your digital assets. All tools below can be used for free. Think outside the box and don’t limit yourself to virtual twins. Virtual possibilities are endless! 
+Here are some tips on how to easily create your digital assets. 
 
-*   If you publish your immersion online (which I hope you will), keep an eye on the total size of your assets. My recommendation is to not exceed 20Mb, otherwise the immersion can be slow to download on some mobile networks. 
-*   To create 3D models, the standard is the [Blender](https://www.blender.org/) open source software. But I personally prefer to create 3D models directly in virtual reality using softwares such as [Gravity Sketch](https://www.gravitysketch.com/)\* on the Meta Quest 2. You can also download free 3D models on platforms such as [Sketchfab](https://sketchfab.com/).
+*   If you publish your immersion online (which I hope you will), keep an eye on the total size of your assets. My recommendation is to not exceed 20Mb. 
+*   To create 3D models, the standard is the [Blender](https://www.blender.org/) open source software. But I personally prefer to create 3D models directly in virtual reality using softwares such as [Gravity Sketch](https://www.gravitysketch.com/)\* on the Meta Quest. You can also download free 3D models on platforms such as [Sketchfab](https://sketchfab.com/).
 *   For animations, I use [Mixamo](https://www.mixamo.com/). In Gravity Sketch, export your model to .fbx format -> import it in Mixamo -> add your animation and download the .fbx file -> import it in Blender and export it in the .glb format.
 *   I personally use [Polycam](https://poly.cam/) for 3D scans. Don’t expect perfect results but it’s still impressive, and you can make a limited number of free scans. Export your scan to the obj format, preferably in the reduced size to optimise download speed.
 *   For soundtracks, I mix ready-made loops from [GarageBand](https://www.apple.com/mac/garageband/) on iOS.
