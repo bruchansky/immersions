@@ -5,7 +5,7 @@
 
 The Immersion open source library allows anyone with basic javascript knowledge to create immersive experiences in virtual reality and on the Web. It is based on [WebXR](https://immersiveweb.dev/) and uses the [babylon.js](https://www.babylonjs.com/) real time 3D engine.
 
-The indie project was initially developed as part of a [platform](https://bruchansky.name/immersions/) dedicated to immersive art on the web (January 2021). I didn’t want to rely on commercial spaces for my artworks, and to be restricted by game and artificial scarcity mechanics found on other VR platforms.
+The indie project was developed as part of a [platform](https://bruchansky.name/immersions/) dedicated to immersive art on the web (January 2021). I didn’t want to rely on commercial spaces for my artworks, and to be restricted by game and artificial scarcity mechanics found on other VR platforms.
 
 Since then, I keep updating the engine based on my own artistic needs, and everyone is welcomed to contribute.
 
