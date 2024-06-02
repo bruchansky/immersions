@@ -264,8 +264,8 @@ class Immersion extends BABYLON.Scene {
             this.texts.inVR="- en VR et avec Audio -";
             this.texts.loading="Chargement";
             this.texts.loadingShort="Loading";
-            this.texts.unmute="Son\n((0))";
-            this.texts.mute="Son\n- x -";
+            this.texts.unmute="▶\nSon";
+            this.texts.mute="⏸︎\nSon";
             this.texts.backPosition="Remise en\nposition";
             this.texts.viewpoint="Vue";
             this.texts.audio="Coin\nAudio";
@@ -307,8 +307,8 @@ class Immersion extends BABYLON.Scene {
             this.texts.inVR="- In VR & with Audio -";
             this.texts.loading="Loading";
             this.texts.loadingShort="Loading";
-            this.texts.unmute="Sound\n((o))";
-            this.texts.mute="Mute\n- x -";
+            this.texts.unmute="▶ Play\nSound";
+            this.texts.mute="⏸︎ Mute\nSound";
             this.texts.backPosition="Back to\nPosition";
             this.texts.viewpoint="View-\npoint";
             this.texts.audio="Audio\nStand";
