@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name=”viewport” content=”width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no” />
+        <meta name="theme-color" content="#000000">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <link rel="icon" type="image/png" href="/immersion_engine/assets/immersion-favicon.png">
+        <meta property="og:title" content="My Immersion">
+        <title>My Immersion</title> 
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <meta name="theme-color" content="#ffffff" />
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs@8.22.1/babylon.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs-loaders@8.22.1/babylonjs.loaders.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs-gui@8.22.1/babylon.gui.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/earcut@2.2.4/dist/earcut.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs-materials@8.22.1/babylonjs.materials.min.js"></script>
+        <script src="/immersion_engine/immersion.js"></script>
+        <script src="/immersion_engine/immersionUI.js"></script>
+        <script src="/immersion_engine/stands/Stand.js"></script>
+        <script src="/immersion_engine/stands/Display.js"></script>
+        <script src="/immersion_engine/stands/Plinth.js"></script>
+        <script src="/immersion_engine/stands/Teleporter.js"></script>
+        <script src="/immersion_engine/stands/Link.js"></script>
+        <script src="demo.js"></script>
+
+        <title>Demo Immersion</title>
+        <!-- full screen mode -->
+        <style>
+            html,
+            body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+                -webkit-tap-highlight-color: transparent; /* Prevent blue highlight on iOS/Android */
+                -webkit-user-select: none; /* Prevent accidental text selection */
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                outline: none;    
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="renderCanvas"></canvas>
+
+        <script type="module">
+            // Start the immersion
+            /**
+             * Creates and initializes an immersive 3D experience with BabylonJS.
+             * Sets up the engine, scene, XR capabilities, and handles global configuration.
+
+             * MyImmersion - The immersion class constructor to instantiate
+             * {string} [lang_p] - Language code for localization (e.g., "en", "fr"), works also with "lang" passed in the URL
+             * {string} [dest_p] - Destination parameter for initial navigation, works also with dest" passed in the URL
+             * {string} [mode_p] - Rendering mode ("dvp","screenshot","minimal"), works also with "mode" passed in the URL
+             * {boolean} [mute_p] - Whether to start with audio muted, works also with mute" passed in the URL
+             */
+            createImmersion(MyImmersion);
+        </script>
+    </body>
+</html>

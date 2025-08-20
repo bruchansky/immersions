@@ -1,0 +1,327 @@
+{
+  "texts": [
+    {
+      "lang": "en",
+      "title": "My Immersion",
+      "author": "My Name",
+      "year": "2022 - 2025",
+      "aboutLink": "https://bruchansky.xyz/immersions",
+      "fullText": "Full\nversion",
+      "fullLink": "https://bruchansky.xyz/immersions",
+      "exitText": "EXIT",
+      "exitLink": "https://bruchansky.xyz/projects",
+      "completed": "🌟 Mission complete! 🌟"
+    },
+    {
+      "lang": "fr",
+      "title": "Mon immersion",
+      "author": "Mon nom",
+      "year": "2022 - 2025",
+      "aboutLink": "https://bruchansky.xyz/immersions",
+      "fullText": "Explore",
+      "fullLink": "https://bruchansky.xyz/immersions",
+      "exitText": "EXIT",
+      "exitLink": "https://bruchansky.xyz/projects",
+      "completed": "🌟 Mission accomplie! 🌟"
+    }
+  ],
+  "stands": [
+        {
+      "id": "mission",
+      "type": "Display",
+      "style": "light",
+      "text": [
+        {
+          "lang": "en",
+          "text": "Your mission",
+          "title": "Your mission",
+          "description": "Collect missing items.\nPoint and click to explore the universe and find them."
+        },
+        {
+          "lang": "fr",
+          "text": "Ta mission",
+          "title": "Ta mission",
+          "description": "Collecte les objets cachés.\nPointe et clique pour explorer l'univers et les trouver."
+        }
+      ],
+      "windowOpened": true,
+      "position": { "x": 0, "y": 0, "z": -175 },
+      "lookingAt": { "x": 0, "y": 1.5, "z": -174 }
+    },
+    {
+      "id": "introduction",
+      "type": "Display",
+      "style": "light",
+      "lineFrom": "mission",
+      "text": [
+        {
+          "lang": "en",
+          "text": "My Immersion",
+          "title": "My Immersion",
+          "description": "This is a short introduction of the gameworld\n\n- available in VR -"
+        },
+        {
+          "lang": "fr",
+          "text": "Mon Immersion",
+          "title": "Mon Immersion",
+          "description": "Une petite introduction de l'univers\n\n - aussi en réalité virtuelle -"
+        }
+      ],
+      "windowOpened": true,
+      "position": { "x": 0.45, "y": 0, "z": -169 },
+      "lookingAt": { "x": 0.35, "y": 1.5, "z": -168 }
+    },
+    {
+      "id": "start",
+      "type": "Teleporter",
+      "gate": "first",
+      "lineFrom": "introduction",
+      "text": [
+        {
+          "lang": "en",
+          "text": "Start"
+        },
+        {
+          "lang": "fr",
+          "text": "Start"
+        }
+      ],
+      "position": { "x": -0.4, "y": 0, "z": -160 },
+      "lookingAt": { "x": -0.4, "y": 1.75, "z": -159 }
+    },
+    {
+      "type": "Stand",
+      "id": "first",
+      "lineFrom": "start",
+      "position": { "x": -50, "y": 0, "z": -90 },
+      "lookingAt": { "x": -50, "y": 1.7, "z": -89 }
+    },
+    {
+      "type": "Display",
+      "id": "gameDisplay",
+      "style": "light",
+      "position": { "x": -50, "y": 0, "z": -83 },
+      "lookingAt": { "x": -50, "y": 1.5, "z": -82 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Game",
+          "title": "Point & Click",
+          "description": "Click on the objects to collect badges."
+        },
+        {
+          "lang": "fr",
+          "text": "Jeu",
+          "title": "Point & Click",
+          "description": "Clique sur les objets pour collecter des badges."
+        }
+      ]
+    },
+    {
+      "id": "soundDisplay",
+      "type": "Display",
+      "sound": "onpress",
+      "loop": false,
+      "factorSound": 1,
+      "style": "darkwireframe",
+      "lineFrom": "gameDisplay",
+      "position": { "x": -48, "y": 0, "z": -65 },
+      "lookingAt": { "x": -48.25, "y": 1.5, "z": -64 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Sound",
+          "title": "Sound",
+          "description": "This is a simple audio display."
+        },
+        {
+          "lang": "fr",
+          "text": "Son",
+          "title": "Son",
+          "description": "Il s'agit d'un affichage audio simple."
+        }
+      ]
+    },
+    {
+      "id": "choice",
+      "type": "Display",
+      "style": "light",
+      "lineFrom": "soundDisplay",
+      "position": { "x": -50.5, "y": 0, "z": -55 },
+      "lookingAt": { "x": -50.5, "y": 1.42, "z": -54 },
+      "text": [
+        {
+          "lang": "en",
+          "title": "Choice",
+          "description": "Choose between a gate or a link."
+        },
+        {
+          "lang": "fr",
+          "title": "Choix",
+          "description": "Choisis entre un téléporteur ou un lien."
+        }
+      ]
+    },
+    {
+      "id": "regularGate",
+      "type": "Teleporter",
+      "gate": "exhibitPlinth",
+      "lineFrom": "choice",
+      "position": { "x": -49.5, "y": 0, "z": -45 },
+      "lookingAt": { "x": -49, "y": 1.5, "z": -44 }
+    },
+    {
+      "id": "regularLink",
+      "type": "Link",
+      "lineFrom": "choice",
+      "position": { "x": -51.5, "y": 0, "z": -45 },
+      "lookingAt": { "x": -51.5, "y": 1.5, "z": -44 },
+      "text": [
+        {
+          "lang": "en",
+          "gate": "https://bruchansky.name"
+        },
+        {
+          "lang": "fr",
+          "gate": "https://bruchansky.name"
+        }
+      ]
+    },
+    {
+      "id": "exhibitPlinth",
+      "type": "Plinth",
+      "exhibit": true,
+      "rotationE": true,
+      "style": "dark",
+      "lineFrom": "regularPlinth",
+      "position": { "x": 52, "y": 0, "z": 90 },
+      "lookingAt": { "x": 52, "y": 1.4, "z": 91 },
+      "text": [
+        {
+          "lang": "en",
+          "title": "Rock",
+          "description": "This is a rock"
+        },
+        {
+          "lang": "fr",
+          "title": "Rocher",
+          "description": "Ceci est un rocher."
+        }
+      ]
+    },
+    {
+      "id": "customPlinth",
+      "type": "Plinth",
+      "sound": "autoplay",
+      "style": "dark",
+      "lineFrom": "exhibitPlinth",
+      "loop": false,
+      "width": 0.8,
+      "depth": 0.4,
+      "height": 1.2,
+      "distance": 1.8,
+      "exhibit": true,
+      "position": { "x": 53, "y": 0, "z": 110 },
+      "lookingAt": { "x": 53, "y": 1.5, "z": 111 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Text",
+          "title": "Custom",
+          "description": "This is a customised plinth."
+        },
+        {
+          "lang": "fr",
+          "text": "Text",
+          "title": "Customisation",
+          "description": "Ceci est un socle personnalisé."
+        }
+      ]
+    },
+    {
+      "id": "soundPlinth",
+      "type": "Plinth",
+      "sound": "autoplay",
+      "style": "dark",
+      "lineFrom": "customPlinth",
+      "position": { "x": 49, "y": 0, "z": 120 },
+      "lookingAt": { "x": 49, "y": 1.4, "z": 121 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Text",
+          "title": "The End",
+          "description": "Please click on the < > to find the open source code."
+        },
+        {
+          "lang": "fr",
+          "text": "Text",
+          "title": "Fin",
+          "description": "Clique sur le < > pour trouver le code source."
+        }
+      ]
+    },
+    {
+      "id": "next",
+      "type": "Display",
+      "style": "dark",
+      "windowOpened": true,
+      "position": { "x": 49, "y": 0, "z": 130 },
+      "lookingAt": { "x": 49, "y": 1.4, "z": 131 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "EXIT",
+          "title": "Thanks for coming",
+          "description": "Christophe Bruchansky\n2022-2025\n\nLearn more about the project and explore other mini-games."
+        },
+        {
+          "lang": "fr",
+          "text": "EXIT",
+          "title": "Merci de la visite",
+          "description": "Christophe Bruchansky\n2022-2025\n\nApprends-en plus sur le projet et explore d’autres jeux."
+        }
+      ]
+    },
+           {
+      "id": "about",
+      "type": "Link",
+      "style": "dark",
+      "lineFrom": "next",
+      "position": { "x": 48.2, "y": 0, "z": 137 },
+      "lookingAt": { "x": 48.2, "y": 1.4, "z": 138 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "About",
+          "gate": "https://bruchansky.xyz/immersions"
+        },
+        {
+          "lang": "fr",
+          "text": "À\npropos",
+          "gate": "https://bruchansky.xyz/immersions"
+        }
+      ]
+    },
+               {
+      "id": "more",
+      "type": "Link",
+      "style": "dark",
+      "lineFrom": "next",
+      "position": { "x": 49.8, "y": 0, "z": 137 },
+      "lookingAt": { "x": 49.8, "y": 1.4, "z": 138 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Other\ngames",
+          "gate": "https://bruchansky.xyz/projects"
+        },
+        {
+          "lang": "fr",
+          "text": "Autres\njeux",
+          "gate": "https://bruchansky.xyz/projects"
+        }
+      ]
+    }
+  ]
+}
