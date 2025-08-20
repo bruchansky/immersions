@@ -7,7 +7,7 @@ Immersions is an open-source JavaScript library for building immersive point‑a
 
 The library is built on the belief that the web is the best medium for creating an open network of virtual experiences accessible to everyone.
 
-It was originally developed in January 2021 as part of a [platform](https://bruchansky.name/immersions/) dedicated to immersive art on the web. From the start, I wanted to avoid depending on commercial platforms and being limited by the artificial scarcity models they impose.
+It was originally developed in January 2021 as part of a [platform](https://bruchansky.xyz/immersions/) dedicated to immersive art on the web. From the start, I wanted to avoid depending on commercial platforms and being limited by the artificial scarcity models they impose.
 
 Since then, the project has gone through significant updates, evolving into a point-and-click library where users can also collect items along their journey.
 
@@ -24,7 +24,7 @@ Features:
 * **Boundless**: whether you are an artist, architect or designer, the only limit is your imagination.
 
 
-👉 Explore [art projects built with Immersions](https://bruchansky.name/projects/)
+👉 Explore [art projects built with Immersions](https://bruchansky.xyz/projects/)
 
 ## License 
 
