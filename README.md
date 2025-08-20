@@ -24,7 +24,7 @@ Features:
 * **Boundless**: whether you are an artist, architect or designer, the only limit is your imagination.
 
 
-👉 Explore [art projects built with Immersions](https://bruchansky.xyz/projects/)
+👉 Explore [mini art games built with Immersions](https://bruchansky.xyz/projects/)
 
 ## License 
 
