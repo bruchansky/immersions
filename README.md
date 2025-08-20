@@ -7,9 +7,9 @@ Immersions is an open-source JavaScript library for building immersive point‑a
 
 The library is built on the belief that the web is the best medium for creating an open network of virtual experiences accessible to everyone.
 
-It was originally developed in January 2021 as part of a [platform](https://bruchansky.xyz/immersions/) dedicated to immersive art on the web. From the start, I wanted to avoid depending on commercial platforms and being limited by the artificial scarcity models they impose.
+It was originally developed in January 2021 as part of a [platform](https://bruchansky.xyz/immersions/) dedicated to immersive art on the web. From the start, I wanted to avoid depending on commercial platforms.
 
-Since then, the project has gone through significant updates, evolving into a point-and-click library where users can also collect items along their journey.
+Since then, the project has gone through significant updates, evolving into a point-and-click library where users can collect items along their journey.
 
 I continue to update the engine to meet my own artistic needs, and contributions from others are always welcome.
 
@@ -75,18 +75,11 @@ Now that you have installed the immersion engine and have created your 3D assets
 Immersions are composed of reusable navigation elements called “stands”. Stands allow visitors to interact with their environment whether in virtual reality, on desktop, mobile or tablet. Immersions will automatically display a user interface on mobile or desktop, and will handle most common VR navigation. So that you can focus on the point and click experience you want to create, and not think too much about engine setup or navigation. 
 
 Here are the different types of stands you can create, all are documented in the demo folder:
-```
-“Stands” are the simplest ones, they are like viewpoints: 
-  a simple way for visitors to move around in your immersion.
-
-“Teleporters” are stands that teleport visitors to another location (another stand) in your immersion.
-  
-“Links” are stands that open external links.
-  
-“Displays” are stands that display texts and can play sounds
-
-“Plinths” are displays for 3D models.
-```
+*  “Stands” are the simplest ones, they are like viewpoints: a simple way for visitors to move around in your immersion.
+*  “Teleporters” are stands that teleport visitors to another location (another stand) in your immersion.
+*  Links” are stands that open external links.
+*  “Displays” are stands that display texts and can play sounds
+*  “Plinths” are displays for 3D models.
 
 Beyond stands, you can also add collectable items. The engine will handle the rest—making them clickable, styling them consistently, and associating them with stars to collect.
 
