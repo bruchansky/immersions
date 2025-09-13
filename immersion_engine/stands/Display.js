@@ -316,7 +316,7 @@ class Display extends Stand {
      *
      * @memberof Display
      */
-    windowSwitch() {
+    windowSwitch(force) {
         let positionFront = 0.03;
         if (this.depth >= 0.3) positionFront = this.depth / 2 + 0.005;
         var animationBox1 = new BABYLON.Animation(
@@ -385,7 +385,7 @@ class Display extends Stand {
                     false,
                 );
             }
-        } else if (this.standWindowBack.scaling.y == 0.2) {
+        } else if (this.standWindowBack.scaling.y == 0.2 && !force) {
             this.standWindow.scaling.y = 1;
             this.standWindowTexture =
                 BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(
