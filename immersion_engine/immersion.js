@@ -611,7 +611,6 @@ class Immersion extends BABYLON.Scene {
       if (stand.name == name) var st = this.stands.indexOf(stand);
     }
     if (this.stands[st] instanceof Link) {
-      console.log("hello");
       this.stands[st].openLink();
     } else {
       this.currentStandIndex = st;
@@ -968,7 +967,9 @@ class Immersion extends BABYLON.Scene {
       m.actionManager = new BABYLON.ActionManager(scene);
       // Only the root carries the lockable state. Children mirror visuals only.
       if (m !== rootMesh) m.lockable = false;
+      m.alwaysSelectAsActiveMesh = true;
       m.defaultMaterial = m.material;
+      m.defaultFog=m.applyFog;
 
       // Hover in
       m.actionManager.registerAction(
@@ -979,11 +980,12 @@ class Immersion extends BABYLON.Scene {
               standName == undefined ||
               scene.currentStand().name == standName
             ) {
-              m.material = scene.selectionMaterial.clone();
+              m.material = scene.selectionMaterial;
               if (m.defaultMaterial.backFaceCulling == false)
                 m.material.backFaceCulling = false;
-              m.applyFog = false;
-            }
+                m.applyFog = false;
+                m.actionManager.hoverCursor = "pointer";
+            } else m.actionManager.hoverCursor = "default";
           }
         )
       );
@@ -998,7 +1000,7 @@ class Immersion extends BABYLON.Scene {
               scene.currentStand().name == standName
             ) {
               m.material = m.defaultMaterial;
-              m.applyFog = true;
+              m.applyFog = m.defaultFog;
             }
           }
         )
