@@ -308,6 +308,7 @@ class Immersion extends BABYLON.Scene {
       result.optimizations.push(
         new BABYLON.HardwareScalingOptimization(priority, 4)
       );
+      /*
       BABYLON.SceneOptimizer.OptimizeAsync(
         scene,
         result,
@@ -318,6 +319,7 @@ class Immersion extends BABYLON.Scene {
           // FPS target not reached
         }
       );
+      */
     };
 
     var loading_click = this.assetsManager.addBinaryFileTask(
@@ -792,7 +794,7 @@ class Immersion extends BABYLON.Scene {
     scene.counterCheckDistance = 0;
     scene.registerBeforeRender(function () {
       // change settings is user is seated
-      /*
+      
       if (scene.inXR == true) {
         if (
           scene.activeCamera.position.y < 1.25 &&
@@ -802,8 +804,9 @@ class Immersion extends BABYLON.Scene {
           for (const stand of scene.stands) {
             if (stand.plinth) {
               stand.plinth.position.y = stand.plinth.position.y - 0.6;
-              stand.plinth.isVisible = false;
-              stand.plinthBase.isVisible = false;
+              stand.plinthBase.position.y = stand.plinthBase.position.y + 0.6;
+              stand.plinth.isVisible = true;
+              stand.plinthBase.isVisible = true;
             }
           }
         } else if (
@@ -814,13 +817,14 @@ class Immersion extends BABYLON.Scene {
           for (const stand of scene.stands) {
             if (stand.plinth) {
               stand.plinth.position.y = stand.plinth.position.y + 0.6;
+              stand.plinthBase.position.y = stand.plinthBase.position.y - 0.6;
               stand.plinth.isVisible = true;
               stand.plinthBase.isVisible = true;
             }
           }
         }
       }
-      */
+      
       // Recomputes camera position based on updated target
       if (MODE !== "dvp" && scene.inXR == false && scene.cameraMoving == true) {
         scene.activeCamera.position = scene.activeCamera._p;
