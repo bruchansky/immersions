@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cosmic Person</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a1a; }
+    canvas { position: fixed; top: 0; left: 480px; width: calc(100vw - 480px); height: 100vh; z-index: 0; }
+    #ui {
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 10;
+      background: rgba(0,0,0,0.75); padding: 14px 10px;
+      display: flex; flex-direction: column; gap: 12px; width: 480px;
+      overflow-y: auto;
+    }
+    #controls { display: flex; flex-direction: column; gap: 12px; }
+    .row { display: flex; flex-direction: row; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .path-row { display: flex; flex-direction: column; gap: 4px; }
+    .label { color: #88f; font-family: monospace; font-size: 11px;
+             text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+    button {
+      background: #222; border: 1px solid #444; color: #ccc;
+      padding: 5px 10px; font-size: 11px; font-family: monospace;
+      cursor: pointer; border-radius: 3px;
+    }
+    button:hover { background: #334; border-color: #88f; color: #fff; }
+    button.active { background: #226; border-color: #88f; color: #aaf; }
+    input[type="text"] {
+      background: #222; border: 1px solid #444; color: #ccc;
+      padding: 5px 10px; font-size: 11px; font-family: monospace;
+      border-radius: 3px; width: 100%;
+    }
+    input[type="text"]:focus { outline: none; border-color: #88f; }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="ui"><span style="color:#555;font-family:monospace;font-size:11px">Loading...</span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/babylonjs@6.8.0/babylon.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/babylonjs-loaders@6.8.0/babylonjs.loaders.js"></script>
+<script src="character.js"></script>
+
+<script>
+  const engine = new BABYLON.Engine(document.getElementById('canvas'), true);
+  const scene  = new BABYLON.Scene(engine);
+  scene.clearColor = new BABYLON.Color4(0, 0.6, 0, 1);
+
+  const camera = new BABYLON.ArcRotateCamera('cam', Math.PI / 2, Math.PI / 2.5, 3, new BABYLON.Vector3(0, 0.8, 0), scene);
+  camera.lowerRadiusLimit = 0.5; camera.upperRadiusLimit = 8;
+  camera.attachControl(document.getElementById('canvas'), true);
+  new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), scene).intensity = 1.2;
+  new BABYLON.DirectionalLight('dir',  new BABYLON.Vector3(-1, -2, -1), scene).intensity = 0.8;
+
+  let char = null;
+
+  const ui = document.getElementById('ui');
+  ui.innerHTML = '';
+
+  // VRM path row — stays persistent across loads
+  const modelRow = document.createElement('div');
+  modelRow.className = 'path-row';
+  modelRow.innerHTML = '<span class="label">VRM path</span>';
+  const vrmInput = document.createElement('input');
+  vrmInput.type = 'text';
+  vrmInput.value = '';
+  vrmInput.placeholder = '/path/to/character.vrm';
+  const loadBtn = document.createElement('button');
+  loadBtn.textContent = 'Load';
+  loadBtn.onclick = () => loadChar(vrmInput.value.trim());
+  vrmInput.addEventListener('keydown', e => { if (e.key === 'Enter') loadChar(vrmInput.value.trim()); });
+  modelRow.appendChild(vrmInput);
+  modelRow.appendChild(loadBtn);
+  ui.appendChild(modelRow);
+
+  function loadChar(path) {
+    if (!path) return;
+    const lastSlash = path.lastIndexOf('/');
+    const folder = lastSlash >= 0 ? path.slice(0, lastSlash + 1) : '';
+    const file   = lastSlash >= 0 ? path.slice(lastSlash + 1)    : path;
+    // Remove controls, keep path row
+    [...ui.children].slice(1).forEach(el => el.remove());
+    ui.appendChild(Object.assign(document.createElement('span'), {
+      textContent: 'Loading…',
+      style: 'color:#555;font-family:monospace;font-size:11px',
+    }));
+    if (char) char.dispose();
+    char = new Character(scene, folder, file);
+    char.load().then(() => {
+      char.body('default');
+      char._applyExpressions();
+      if (char.root) char.root.scaling = new BABYLON.Vector3(0.7, 0.7, 0.7);
+      buildUI(char);
+    }).catch(err => {
+      [...ui.children].slice(1).forEach(el => el.remove());
+      ui.appendChild(Object.assign(document.createElement('span'), {
+        textContent: 'Error: ' + err.message,
+        style: 'color:#f66;font-family:monospace;font-size:11px',
+      }));
+
+    });
+  }
+
+  function buildUI(char) {
+    [...ui.children].slice(1).forEach(el => el.remove());
+    const controls = document.createElement('div');
+    controls.id = 'controls';
+
+    function makeCol(label, options, onClick) {
+      const col = document.createElement('div');
+      col.className = 'row';
+      col.innerHTML = `<span class="label">${label}</span>`;
+      options.forEach(name => {
+        const btn = document.createElement('button');
+        btn.textContent = name;
+        btn.onclick = () => {
+          onClick(name);
+          col.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        };
+        col.appendChild(btn);
+      });
+      return col;
+    }
+
+    controls.appendChild(makeCol('Body',      ['default','sitting','walking','dancing','flying'], n => char.body(n)));
+    controls.appendChild(makeCol('Left arm',  ['default','up','forward','bent'], n => char.leftArm(n)));
+    controls.appendChild(makeCol('Right arm', ['default','up','forward','bent'], n => char.rightArm(n)));
+    controls.appendChild(makeCol('Look',      ['default','left','right','up','down'], n => char.look(n)));
+    controls.appendChild(makeCol('Mouth', ['default','smiling','open','surprised'], n => char.mouth(n)));
+    controls.appendChild(makeCol('Eyes',  ['default','closed'], n => char.eyes(n)));
+    ui.appendChild(controls);
+  }
+
+  engine.runRenderLoop(() => scene.render());
+  window.addEventListener('resize', () => engine.resize());
+</script>
+</body>
+</html>

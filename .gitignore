@@ -1,0 +1,6 @@
+node_modules/
+external/
+.playwright-mcp/
+characters/lib/
+.DS_Store
+*.log

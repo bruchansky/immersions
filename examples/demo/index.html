@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="theme-color" content="#000000">
+        <meta property="og:title" content="Immersions Demo">
+        <meta property="og:image" content="/immersion_engine/examples/demo/assets/demo.jpg">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <link rel="icon" type="image/png" href="/immersion_engine/assets/immersion-favicon.png">
+        <title>Immersions Demo</title>
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                outline: none;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="renderCanvas"></canvas>
+
+        <!-- BabylonJS — CDN for development. For production, replace with local copies from /immersion_engine/external/ -->
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs@9.10.1/babylon.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs-loaders@9.10.1/babylonjs.loaders.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs-gui@9.10.1/babylon.gui.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/earcut@2.2.4/dist/earcut.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs-materials@9.10.1/babylonjs.materials.min.js"></script>
+
+        <!-- Immersion engine -->
+        <script src="/immersion_engine/immersion.js"></script>
+        <script src="/immersion_engine/immersionUI.js"></script>
+        <script src="/immersion_engine/stands/Stand.js"></script>
+        <script src="/immersion_engine/stands/Display.js"></script>
+        <script src="/immersion_engine/stands/Plinth.js"></script>
+        <script src="/immersion_engine/stands/Teleporter.js"></script>
+        <script src="/immersion_engine/stands/Link.js"></script>
+
+        <script src="demo.js"></script>
+
+        <script>
+            // Parameters can be passed as URL query strings or as arguments here:
+            //   lang    — language code, e.g. "en" or "fr" (default: "en")
+            //   mode    — "arc" (default), "dvp" (free camera + position logging), "screenshot" (stands hidden), "menu" (no audio), "cinematic" (auto-play, no audio)
+            //   mute    — true to start muted
+            //   dest    — stand id to navigate to on load, e.g. "myStand"
+            // Example: createImmersion(MyImmersion, "fr", "entrance", "dvp", false)
+            createImmersion(MyImmersion);
+        </script>
+    </body>
+</html>

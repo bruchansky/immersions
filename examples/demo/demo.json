@@ -1,0 +1,241 @@
+{
+  "_doc": "See immersion-demo/demo.js for full field descriptions and engine method examples.",
+  "texts": [
+    {
+      "lang": "en",
+      "title": "Immersions Demo",
+      "author": "Christophe Bruchansky",
+      "year": "2025",
+      "aboutTextButton": "About",
+      "aboutLink": "https://github.com/bruchansky/immersions",
+      "fullText": "PLAY",
+      "fullLink": "https://github.com/bruchansky/immersions",
+      "exitText": "MAKE",
+      "exitLink": "https://github.com/bruchansky/immersions"
+    },
+    {
+      "lang": "fr",
+      "title": "Démo Immersions",
+      "author": "Christophe Bruchansky",
+      "year": "2025",
+      "aboutTextButton": "À propos",
+      "aboutLink": "https://github.com/bruchansky/immersions",
+      "fullText": "PLAY",
+      "fullLink": "https://github.com/bruchansky/immersions",
+      "exitText": "Créer",
+      "exitLink": "https://github.com/bruchansky/immersions"
+    }
+  ],
+  "stands": [
+    {
+      "id": "entrance",
+      "type": "Stand",
+      "position": { "x": 0, "y": 0, "z": -50 },
+      "lookingAt": { "x": 0, "y": 1.6, "z": -49 }
+    },
+    {
+      "id": "displayLight",
+      "type": "Display",
+      "durationInSec": 3,
+      "windowOpened": true,
+      "style": "light",
+      "vrSide": -0.5,
+      "lineFrom": "entrance",
+      "position": { "x": 0, "y": 0, "z": -46 },
+      "lookingAt": { "x": 0, "y": 1.6, "z": -45 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Light Display",
+          "title": "Light Style",
+          "subtitle": true,
+          "description": "This is a Display stand with light style and a text window."
+        },
+        {
+          "lang": "fr",
+          "text": "Affichage clair",
+          "title": "Style clair",
+          "subtitle": true,
+          "description": "Ceci est un affichage en style clair avec une fenêtre de texte."
+        }
+      ]
+    },
+    {
+      "id": "teleporter",
+      "type": "Teleporter",
+      "gate": "start",
+      "position": { "x": 0, "y": 0, "z": -38 },
+      "lookingAt": { "x": 0, "y": 1.6, "z": -37 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Start"
+        },
+        {
+          "lang": "fr",
+          "text": "Start"
+        }
+      ]
+    },
+    {
+      "id": "start",
+      "type": "Display",
+      "style": "lightwireframe",
+      "position": { "x": 0, "y": 0, "z": -20 },
+      "lookingAt": { "x": 0, "y": 1.6, "z": -19 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Dark Display",
+          "title": "Dark Style",
+          "description": "This is a Display stand with dark style."
+        },
+        {
+          "lang": "fr",
+          "text": "Affichage sombre",
+          "title": "Style sombre",
+          "description": "Ceci est un affichage en style sombre."
+        }
+      ]
+    },
+    {
+      "id": "soundDisplay",
+      "type": "Display",
+      "style": "dark",
+      "sound": "onpress",
+      "loop": false,
+      "factorSound": 1,
+      "position": { "x": 0, "y": 1.6, "z": -14 },
+      "lookingAt": { "x": 0, "y": 1.2, "z": -13 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Sound On Press",
+          "title": "Sound: On Press",
+          "description": "This Display plays its sound when the audio button is pressed."
+        },
+        {
+          "lang": "fr",
+          "text": "Son au clic",
+          "title": "Son : au clic",
+          "description": "Cet affichage joue son son quand le bouton audio est pressé."
+        }
+      ]
+    },
+    {
+      "id": "exhibitPlinth",
+      "type": "Plinth",
+      "durationInSec": 6,
+      "exhibit": true,
+      "rotationE": true,
+      "style": "dark",
+      "position": { "x": 0, "y": 0, "z": -5 },
+      "lookingAt": { "x": 0, "y": 1.6, "z": -4 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Rock",
+          "title": "Exhibit Plinth",
+          "subtitle": true,
+          "description": "A Plinth with exhibit: true and rotationE: true. A 3D model is attached via attachMesh()."
+        },
+        {
+          "lang": "fr",
+          "text": "Rocher",
+          "title": "Socle avec exhibit",
+          "subtitle": true,
+          "description": "Un socle avec exhibit: true et rotationE: true. Un modèle 3D est attaché via attachMesh()."
+        }
+      ]
+    },
+    {
+      "id": "lockedPlinth",
+      "type": "Plinth",
+      "exhibit": true,
+      "locked": true,
+      "windowOpened": true,
+      "style": "dark",
+      "height": 1,
+      "width": 0.6,
+      "depth": 0.3,
+      "distance": 2.0,
+      "position": { "x": 0, "y": 0, "z": 2 },
+      "lookingAt": { "x": 0, "y": 1.6, "z": 5 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Locked",
+          "title": "Locked Plinth",
+          "description": "A Plinth with locked: true. The exhibit is hidden until unlock() is called. Use unlock(true) to show a reveal button, or unlock(false) to reveal immediately."
+        },
+        {
+          "lang": "fr",
+          "text": "Verrouillé",
+          "title": "Socle verrouillé",
+          "description": "Un socle avec locked: true. L'exhibit est caché jusqu'à l'appel de unlock(). unlock(true) affiche un bouton de révélation, unlock(false) révèle immédiatement."
+        }
+      ]
+    },
+    {
+      "id": "audioPlinth",
+      "type": "Plinth",
+      "durationInSec": 6,
+      "sound": "autoplay",
+      "loop": false,
+      "style": "dark",
+      "position": { "x": 0, "y": 0, "z": 9 },
+      "lookingAt": { "x": 0, "y": 1.35, "z": 10 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Audio Plinth",
+          "title": "Audio-Only Plinth",
+          "description": "A Plinth with autoplay sound but no 3D exhibit. Sound is attached via attachSound()."
+        },
+        {
+          "lang": "fr",
+          "text": "Socle audio",
+          "title": "Socle audio seul",
+          "description": "Un socle avec son automatique mais sans modèle 3D. Le son est attaché via attachSound()."
+        }
+      ]
+    },
+    {
+      "id": "externalLink",
+      "type": "Link",
+      "position": { "x": 2, "y": 0, "z": 15 },
+      "lookingAt": { "x": 2, "y": 1.75, "z": 16 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Source Code",
+          "gate": "https://github.com/bruchansky/immersions"
+        },
+        {
+          "lang": "fr",
+          "text": "Code source",
+          "gate": "https://github.com/bruchansky/immersions"
+        }
+      ]
+    },
+    {
+      "id": "lockedLink",
+      "type": "Link",
+      "locked": true,
+      "position": { "x": -2, "y": 0, "z": 15 },
+      "lookingAt": { "x": -2, "y": 1.75, "z": 16 },
+      "text": [
+        {
+          "lang": "en",
+          "text": "Unlock Me",
+          "gate": "https://github.com/bruchansky/immersions"
+        },
+        {
+          "lang": "fr",
+          "text": "Déverrouillez-moi",
+          "gate": "https://github.com/bruchansky/immersions"
+        }
+      ]
+    }
+  ]
+}

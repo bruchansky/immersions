@@ -1,0 +1,50 @@
+{
+  "texts": [
+    {
+      "lang": "en",
+      "title": "My Immersion",
+      "author": "Your Name",
+      "year": "2025",
+      "aboutLink": "https://example.com/about",
+      "fullLink": "https://example.com"
+    },
+    {
+      "lang": "fr",
+      "title": "Mon Immersion",
+      "author": "Votre Nom",
+      "year": "2025",
+      "aboutLink": "https://example.com/about",
+      "fullLink": "https://example.com"
+    }
+  ],
+  "stands": [
+    {
+      "id": "start",
+      "type": "Stand",
+      "position": { "x": 0, "y": 0, "z": -5 },
+      "lookingAt": { "x": 0, "y": 1.4, "z": 0 }
+    },
+    {
+      "id": "info",
+      "type": "Display",
+      "durationInSec": 3,
+      "position": { "x": 0, "y": 0, "z": -1 },
+      "lookingAt": { "x": 0, "y": 1.5, "z": 0 },
+      "windowOpened": false,
+      "text": [
+        {
+          "lang": "en",
+          "text": "Info",
+          "title": "Welcome",
+          "description": "This is an example display stand. Edit template.json to change this text."
+        },
+        {
+          "lang": "fr",
+          "text": "Info",
+          "title": "Bienvenue",
+          "description": "Ceci est un exemple de stand. Modifiez template.json pour changer ce texte."
+        }
+      ]
+    }
+  ]
+}
