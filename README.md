@@ -9,7 +9,7 @@
 
 Immersions is an open-source JavaScript library for building immersive experiences in WebXR. Powered by the [Babylon.js](https://www.babylonjs.com/) 3D engine, it runs seamlessly in browsers across desktop, mobile, and VR headsets.
 
-The library is based on the idea that the web is the best foundation for building an open network of virtual experiences. It was originally developed in January 2021 as part of an [immersive artistic platform](https://bruchansky.xyz/immersions/). From the outset, the aim was to steer clear of commercial platforms as a means of artistic expression.
+The library is based on the idea that the web is the best foundation for building an open network of virtual experiences. It was originally developed in January 2022 as part of an [immersive artistic platform](https://bruchansky.xyz/immersions/). From the outset, the aim was to steer clear of commercial platforms as a means of artistic expression.
 
 Since then, the project has seen major updates and grown into a library capable of powering anything from simple point-and-click games to cinematic 3D replays.
 
