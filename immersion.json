@@ -23,7 +23,7 @@
             "fullText": "PLAY",
             "fullLink": "https://bruchansky.xyz/plastic",
             "cancelButton": "Cancel",
-            "exitText": "MAKE",
+            "exitText": "EXIT",
             "exitLink": "https://bruchansky.xyz/immersions"
         },
         {
@@ -49,7 +49,7 @@
             "fullText": "PLAY",
             "fullLink": "https://bruchansky.xyz/plastic",
             "cancelButton": "Annuler",
-            "exitText": "Créer",
+            "exitText": "EXIT",
             "exitLink": "https://bruchansky.xyz/immersions"
         }
     ]
