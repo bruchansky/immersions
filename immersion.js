@@ -695,11 +695,12 @@ class Immersion extends BABYLON.Scene {
    * @param {number} [distance] - The maximum distance at which the sound can be heard (optional).
    * @memberof Immersion
    */
-  addSound(music, position, distance) {
+  addSound(music, position, distance, volume) {
     var element = new Object();
     element.data = music;
     if (position) element.position = position;
     if (distance) element.distance = distance;
+    if (volume !== undefined) element.volume = volume;
     this.sceneSounds.push(element);
   }
 
@@ -720,6 +721,7 @@ class Immersion extends BABYLON.Scene {
           autoplay: true,
           maxDistance: distance,
           spatialSound: spatial,
+          volume: element.volume !== undefined ? element.volume : 1,
         });
         if (element.position) m.setPosition(element.position);
         element.sound = m;
@@ -1211,8 +1213,8 @@ class Immersion extends BABYLON.Scene {
     if (this.inXR == true) {
       this.xr.baseExperience.exitXRAsync();
       window.open(link, newTab ? "_blank" : tab);
-    } else if (newTab) {
-      window.open(link, "_blank");
+    } else if (newTab || (typeof MODE !== "undefined" && MODE === "menu")) {
+      window.open(link, tab || "_blank");
     } else {
       if (window.top !== window.self) {
         window.top.location.href = link;

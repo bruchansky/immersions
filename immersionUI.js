@@ -130,7 +130,7 @@ class ImmersionUI {
     aboutButton.height = "50px";
     aboutButton.width = "80px";
     aboutButton.paddingRight = "10px";
-    aboutButton.top = "10px";
+    aboutButton.top = "70px";
     aboutButton.fontFamily = this.fontName;
     aboutButton.cornerRadius = 10;
     aboutButton.color = "transparent"; // No border
@@ -160,7 +160,7 @@ class ImmersionUI {
     this.aboutButton = aboutButton; // Store reference for later updates
     aboutButton.onPointerUpObservable.add(function () {
       aboutButton.background = aboutBg; aboutButton.image.source = aboutIcon;
-      aboutButton.scene.openLink(aboutButton.link, "about", false);
+      aboutButton.scene.openLink(aboutButton.link, "about", true);
     });
     this.fullscreenUI.addControl(aboutButton);
     this.aboutButton = aboutButton;
@@ -201,7 +201,7 @@ class ImmersionUI {
     this.fullImmersionButton = fullImmersionButton; // Store reference for later updates
     fullImmersionButton.onPointerUpObservable.add(function () {
       fullImmersionButton.background = fullBg; fullImmersionButton.textBlock.color = fullTextColor;
-      scene.openLink(fullImmersionButton.link,"play");
+      scene.openLink(fullImmersionButton.link, "play", true);
     });
     this.fullscreenUI.addControl(fullImmersionButton);
     this.fullImmersionButton = fullImmersionButton;
@@ -217,7 +217,7 @@ class ImmersionUI {
     exitButton.height = "50px";
     exitButton.width = "80px";
     exitButton.paddingRight = "10px";
-    exitButton.top = "70px";
+    exitButton.top = "10px";
     exitButton.fontFamily = this.fontName;
     exitButton.textBlock.fontWeight = "bold";
     exitButton.fontSize = "20px";
@@ -717,7 +717,7 @@ class ImmersionUI {
           }
           const stand = scene.currentStand();
           let text = (stand && stand.description) ? stand.description : "";
-          immersionUI.cinematicSubtitle.textContent = text;
+          immersionUI.cinematicSubtitle.innerHTML = text.replace(/\n/g, "<br>");
           pendingCinematicSetup = true;
         }
         if (pendingCinematicSetup && !scene.cameraMoving) {
