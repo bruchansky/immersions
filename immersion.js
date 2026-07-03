@@ -1237,13 +1237,14 @@ class Immersion extends BABYLON.Scene {
  * @param {string} [dest_p] - Destination parameter for initial navigation
  * @param {string} [mode_p] - Rendering mode ("dvp","screenshot","menu","cinematic")
  * @param {boolean} [mute_p] - Whether to start with audio muted
+ * @param {boolean} [subtitles_p] - Whether to show subtitles in cinematic mode (default true)
  * @since 0.1.0
  */
 // Startup sequence:
 // 1. createImmersion() fetches immersion.json (default UI texts) and stores it as window.immersionData
-// 2. _initializeEngine() sets window globals (MODE/MUTE/LANG/DEST) from URL params or call arguments
+// 2. _initializeEngine() sets window globals (MODE/MUTE/LANG/DEST/SUBTITLES) from URL params or call arguments
 // 3. User's MyImmersion constructor runs; ImmersionUI reads window.immersionData for its text strings
-function createImmersion(ImmersionClass, lang_p, dest_p, mode_p, mute_p) {
+function createImmersion(ImmersionClass, lang_p, dest_p, mode_p, mute_p, subtitles_p) {
   fetch("/immersion_engine/immersion.json", { cache: "no-cache" })
     .then((r) => {
       if (!r.ok) throw new Error(`immersion.json ${r.status}`);
@@ -1251,16 +1252,16 @@ function createImmersion(ImmersionClass, lang_p, dest_p, mode_p, mute_p) {
     })
     .then((data) => {
       window.immersionData = data;
-      _initializeEngine(ImmersionClass, lang_p, dest_p, mode_p, mute_p);
+      _initializeEngine(ImmersionClass, lang_p, dest_p, mode_p, mute_p, subtitles_p);
     })
     .catch((err) => {
       console.error("[createImmersion] failed to load immersion.json:", err);
-      _initializeEngine(ImmersionClass, lang_p, dest_p, mode_p, mute_p);
+      _initializeEngine(ImmersionClass, lang_p, dest_p, mode_p, mute_p, subtitles_p);
     });
 }
 
-function _initializeEngine(ImmersionClass, lang_p, dest_p, mode_p, mute_p) {
-  // MODE, MUTE, LANG, DEST are window globals intentionally — read across immersion.js,
+function _initializeEngine(ImmersionClass, lang_p, dest_p, mode_p, mute_p, subtitles_p) {
+  // MODE, MUTE, LANG, DEST, SUBTITLES are window globals intentionally — read across immersion.js,
   // immersionUI.js, and all stand files. See ARCHITECTURE.md for the reasoning.
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -1268,6 +1269,7 @@ function _initializeEngine(ImmersionClass, lang_p, dest_p, mode_p, mute_p) {
   window.MUTE = true;
   window.MODE = "arc";
   window.DEST = null;
+  window.SUBTITLES = true;
   if (mode_p) MODE = mode_p;
   else if (mode_p == null && urlParams.has("mode"))
     MODE = urlParams.get("mode");
@@ -1280,6 +1282,9 @@ function _initializeEngine(ImmersionClass, lang_p, dest_p, mode_p, mute_p) {
   if (lang_p) LANG = lang_p;
   else if (lang_p == null && urlParams.has("lang"))
     LANG = urlParams.get("lang");
+  if (subtitles_p != null) SUBTITLES = subtitles_p;
+  else if (subtitles_p == null && urlParams.has("subtitles"))
+    SUBTITLES = urlParams.get("subtitles") !== "false";
   // Engine path parameter is no longer used
   const ua = navigator.userAgent;
   const deviceType = () => {

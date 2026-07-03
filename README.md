@@ -80,11 +80,18 @@ Pass a `mode` URL parameter to change how the scene is rendered.
 
 | Mode | Description |
 |---|---|
-| *(default)* | Standard point-and-click navigation with full UI (next/previous/sound/about buttons). If `dest` is also set, the camera rotates continuously around that stand, without navigation — useful for previews. |
+| *(default)* | Standard point-and-click navigation with full UI (next/previous/sound/about buttons). |
 | `cinematic` | Fully automated playback. Hides all UI and stand markers. Subtitles are drawn from each stand's `description` field. The scene auto-advances through stands. |
 | `menu` | Navigation-only mode. Hides sound/about/share buttons and centres the next/previous arrows. Intended for embedding the scene as a navigable menu. |
 | `dvp` | Development mode. Free camera movement, coordinates display in the scene. Press `c` to copy the current position to clipboard. |
 | `screenshot` | Minimizes UI and hides stand markers, for easier screen capturing |
+
+### Additional URL parameters
+
+| Parameter | Description |
+|---|---|
+| `dest` | Navigates directly to a named stand and rotates the camera continuously around it, without navigation UI — useful for previews. Can be combined with any mode. Example: `?dest=my-stand` |
+| `subtitles` | Controls subtitle display in cinematic mode. Defaults to `true`. Pass `subtitles=false` to hide subtitles while keeping automated playback and camera animations. Example: `?mode=cinematic&subtitles=false` |
 
 ## Characters
 

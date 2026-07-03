@@ -522,7 +522,7 @@ class ImmersionUI {
       soundButton.isVisible = false;
       fullImmersionButton.isVisible = false;
     }
-    if (MODE == "cinematic") {
+    if (MODE == "cinematic" && SUBTITLES) {
       const subtitleColor = "white";
       if (!document.getElementById("cinematicSubtitleStyle")) {
         const style = document.createElement("style");
@@ -705,60 +705,60 @@ class ImmersionUI {
     var pendingCinematicSetup = false;
     var cinematicGeneration = 0;
     if (MODE == "cinematic") scene.registerBeforeRender(function () {
-      if (immersionUI.cinematicSubtitle) {
-        const idx = scene.currentStandIndex;
-        if (idx !== lastSubtitleIndex) {
-          lastSubtitleIndex = idx;
-          cinematicGeneration++;
-          immersionUI.cinematicSubtitle.style.visibility = "hidden";
-          if (!scene.cameraMoving && scene.activeCamera.anim) {
-            scene.activeCamera.anim.stop();
-            scene.cameraRotating = null;
-          }
-          const stand = scene.currentStand();
+      const idx = scene.currentStandIndex;
+      if (idx !== lastSubtitleIndex) {
+        lastSubtitleIndex = idx;
+        cinematicGeneration++;
+        if (immersionUI.cinematicSubtitle) immersionUI.cinematicSubtitle.style.visibility = "hidden";
+        if (!scene.cameraMoving && scene.activeCamera.anim) {
+          scene.activeCamera.anim.stop();
+          scene.cameraRotating = null;
+        }
+        const stand = scene.currentStand();
+        if (immersionUI.cinematicSubtitle) {
           let text = (stand && stand.description) ? stand.description : "";
           immersionUI.cinematicSubtitle.innerHTML = text.replace(/\n/g, "<br>");
-          pendingCinematicSetup = true;
         }
-        if (pendingCinematicSetup && !scene.cameraMoving) {
-          pendingCinematicSetup = false;
-          const stand = scene.currentStand();
-          const gen = cinematicGeneration;
-          const hasNext = !scene.noMoreStands();
-          if (DEST) {
-            if (stand && (stand instanceof Plinth || (stand.durationInSec && stand.durationInSec >= 5))) {
-              stand.startRotatingCamera();
-            }
+        pendingCinematicSetup = true;
+      }
+      if (pendingCinematicSetup && !scene.cameraMoving) {
+        pendingCinematicSetup = false;
+        const stand = scene.currentStand();
+        const gen = cinematicGeneration;
+        const hasNext = !scene.noMoreStands();
+        if (DEST) {
+          if (stand && (stand instanceof Plinth || (stand.durationInSec && stand.durationInSec >= 5))) {
+            stand.startRotatingCamera();
+          }
+          setTimeout(function () {
+            if (gen !== cinematicGeneration) return;
+            if (immersionUI.cinematicSubtitle && stand && stand.subtitle) immersionUI.cinematicSubtitle.style.visibility = "visible";
+          }, 500);
+        } else {
+          const duration = ((stand && stand.durationInSec != null) ? stand.durationInSec : 4) * 1000;
+          if (stand && (stand instanceof Plinth || (stand.durationInSec && stand.durationInSec >= 5))) {
+            stand.startRotatingCamera();
+          }
+          setTimeout(function () {
+            if (gen !== cinematicGeneration) return;
+            if (immersionUI.cinematicSubtitle && stand && stand.subtitle) immersionUI.cinematicSubtitle.style.visibility = "visible";
             setTimeout(function () {
               if (gen !== cinematicGeneration) return;
-              if (stand && stand.subtitle) immersionUI.cinematicSubtitle.style.visibility = "visible";
-            }, 500);
-          } else {
-            const duration = ((stand && stand.durationInSec != null) ? stand.durationInSec : 4) * 1000;
-            if (stand && (stand instanceof Plinth || (stand.durationInSec && stand.durationInSec >= 5))) {
-              stand.startRotatingCamera();
-            }
-            setTimeout(function () {
-              if (gen !== cinematicGeneration) return;
-              if (stand && stand.subtitle) immersionUI.cinematicSubtitle.style.visibility = "visible";
+              if (immersionUI.cinematicSubtitle) immersionUI.cinematicSubtitle.style.visibility = "hidden";
               setTimeout(function () {
                 if (gen !== cinematicGeneration) return;
-                immersionUI.cinematicSubtitle.style.visibility = "hidden";
-                setTimeout(function () {
-                  if (gen !== cinematicGeneration) return;
-                  if (scene.activeCamera.anim) { scene.activeCamera.anim.stop(); scene.cameraRotating = null; }
-                  if (!hasNext) {
-                    const link = scene.texts.exitLink;
-                    const sep = link.includes("?") ? "&" : "?";
-                    scene.openLink(link + sep + "mode=cinematic", "exit");
-                  } else {
-                    scene.goNextStand();
-                    scene.currentStand().attachCamera(true);
-                  }
-                }, 500);
-              }, Math.max(0, duration - 1000));
-            }, 500);
-          }
+                if (scene.activeCamera.anim) { scene.activeCamera.anim.stop(); scene.cameraRotating = null; }
+                if (!hasNext) {
+                  const link = scene.texts.exitLink;
+                  const sep = link.includes("?") ? "&" : "?";
+                  scene.openLink(link + sep + "mode=cinematic", "exit");
+                } else {
+                  scene.goNextStand();
+                  scene.currentStand().attachCamera(true);
+                }
+              }, 500);
+            }, Math.max(0, duration - 1000));
+          }, 500);
         }
       }
     });
