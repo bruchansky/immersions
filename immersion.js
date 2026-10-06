@@ -1164,7 +1164,10 @@ class Immersion extends BABYLON.Scene {
                     : remainingLocks === 2 ? scene.soundsp.twoLeft
                     : remainingLocks === 1 ? scene.soundsp.oneLeft
                     : scene.soundsp.missionComplete;
-                  new Audio(sound).play();
+                  new Audio(scene.soundsp.success).play();
+                  setTimeout(() => {
+                    if (!MUTE) new Audio(sound).play();
+                  }, 2000);
                 }
                 if (!forcenoeffect) {
                   const origScale = m.scaling.clone();
